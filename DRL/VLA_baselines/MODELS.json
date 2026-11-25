@@ -1,0 +1,15 @@
+{
+  "note": "Source locations, not unified training CLIs or completed 21-D runners. Later stage recipes import earlier-stage helpers.",
+  "models": [
+    {"name":"FLOWER", "url":"https://github.com/intuitive-robots/flower_vla_pret", "source":["VLA/flower_r69", "VLA/flower_r71", "VLA/flower_rotation_r76"], "upstreams":["flower_vla_pret"]},
+    {"name":"X-VLA", "url":"https://github.com/2toinf/X-VLA", "source":["VLA/new_vlas", "VLA/stable_native_r44"], "upstreams":["xvla", "lerobot"]},
+    {"name":"pi0", "url":"https://github.com/Physical-Intelligence/openpi", "source":["VLA/pi0", "VLA/family_transfer_r54"], "upstreams":["openpi"]},
+    {"name":"VLA-Adapter", "url":"https://github.com/OpenHelix-Team/VLA-Adapter", "source":["VLA/new_vlas"], "upstreams":["vla_adapter"]},
+    {"name":"SmolVLA", "url":"https://github.com/huggingface/lerobot", "source":["VLA/smolvla", "VLA/family_transfer_r54"], "upstreams":["lerobot"]},
+    {"name":"VLA-JEPA", "url":"https://github.com/ginwind/VLA-JEPA", "source":["VLA/extension_r65"], "upstreams":["vla_jepa", "lerobot_jepa"]},
+    {"name":"Dita", "url":"https://github.com/RoboDita/Dita", "source":["VLA/dita_transfer_r84", "VLA/recovery_r85"], "upstreams":["dita"]},
+    {"name":"VLANeXt-S", "url":"https://github.com/DravenALG/VLANeXt", "source":["VLA/replacement_r84", "VLA/refinement_r99"], "upstreams":["vlanext"]},
+    {"name":"FALCON-ESM", "url":"https://github.com/FALCON-VLA/FALCON", "source":["VLA/falcon_esm_r91", "VLA/admission_r100"], "upstreams":["falcon_vla"]},
+    {"name":"Seer", "url":"https://github.com/InternRobotics/Seer", "source":["VLA/admission_r100"], "upstreams":["seer"]}
+  ]
+}

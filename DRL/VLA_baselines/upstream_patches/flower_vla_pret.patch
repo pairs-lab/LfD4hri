@@ -1,0 +1,22 @@
+diff --git a/flower_vla/agents/flower.py b/flower_vla/agents/flower.py
+index 239dc3d..550b08c 100644
+--- a/flower_vla/agents/flower.py
++++ b/flower_vla/agents/flower.py
+@@ -24,7 +24,9 @@ from flower_vla.agents.networks.transformers import (
+     FlowBlock, 
+     stateless_norm
+ )
+-from flower_vla.dataset.utils.act_seq_mapping import DATASET_ACT_SEQ_MAP
++# Local PyBullet integration: this unused import initializes the whole RLDS /
++# TensorFlow dataloader at model import. DATASET_ACT_SEQ_MAP is never referenced
++# in this module; omit only this dependency, preserving every model operation.
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -859,4 +861,4 @@ class FlowerVLA(nn.Module):
+             self.positional_encoding = self.positional_encoding.to(self.device)
+         if self.use_readout_token and hasattr(self, 'register_token'):
+             self.register_token = self.register_token.to(self.device)
+-        self._verify_device_consistency()
+\ No newline at end of file
++        self._verify_device_consistency()

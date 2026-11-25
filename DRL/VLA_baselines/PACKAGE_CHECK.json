@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-25",
+  "scope": "Source export only; no model jobs or external uploads",
+  "copied_file_checksums_passed": 1322,
+  "python_files_syntax_checked": 1292,
+  "numerical_21D_contract_tests_passed": 8,
+  "additional_CPU_sampling_and_spatial_tests_passed": 6,
+  "upstream_source_revisions_recorded": 22,
+  "local_upstream_patches_reverse_check_passed": 4,
+  "shared_action_task_imports_use_exported_namespace": true,
+  "weight_dataset_video_cache_payloads_found": 0,
+  "credential_pattern_scan_findings": 0,
+  "native_model_inference_tested": false,
+  "all_native_runners_migrated_to_21D": false,
+  "original_source_tree_modified": false,
+  "notable_omissions": [
+    "Upstream repos: restore selected pinned sources, then install per-model dependencies",
+    "Main DRL asset tree: supply separately or use explicit link_assets helper",
+    "Model weights, demonstration payloads and historical artifact receipts",
+    "Storage-maintenance scripts; one legacy FALCON test imports their cleanup policy"
+  ]
+}

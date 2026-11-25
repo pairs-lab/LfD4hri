@@ -1,0 +1,94 @@
+diff --git a/scripts/train.py b/scripts/train.py
+index 5d28941..bd5c86a 100644
+--- a/scripts/train.py
++++ b/scripts/train.py
+@@ -222,23 +222,37 @@ def main(config: _config.TrainConfig):
+         sharding=data_sharding,
+         shuffle=True,
+     )
++
++    train_state, train_state_sharding = init_train_state(config, init_rng, mesh, resume=resuming)
++    jax.block_until_ready(train_state)
++    logging.info(f"Initialized train state:\n{training_utils.array_tree_to_info(train_state.params)}")
++
++    if resuming:
++        train_state = _checkpoints.restore_state(checkpoint_manager, train_state, data_loader)
++
++    start_step = int(train_state.step)
+     data_iter = iter(data_loader)
++    if resuming and start_step:
++        # Orbax restores optimizer/model state, but openpi's restore_state
++        # explicitly discards the data loader.  Without advancing this
++        # deterministic shuffled stream, every resume silently repeats the
++        # first part of the dataset.  Replay consumed batches so step N sees
++        # exactly the same sample it would in an uninterrupted run.
++        logging.info(f"Fast-forwarding deterministic data stream by {start_step} batches")
++        for skipped in range(start_step):
++            next(data_iter)
++            if (skipped + 1) % 1000 == 0:
++                logging.info(f"Fast-forwarded {skipped + 1}/{start_step} batches")
+     batch = next(data_iter)
+     logging.info(f"Initialized data loader:\n{training_utils.array_tree_to_info(batch)}")
+ 
+-    # Log images from first batch to sanity check.
++    # Log the actual first batch for this run, including a resumed run after
++    # the deterministic stream has been restored to its checkpoint offset.
+     images_to_log = [
+         wandb.Image(np.concatenate([np.array(img[i]) for img in batch[0].images.values()], axis=1))
+         for i in range(min(5, len(next(iter(batch[0].images.values())))))
+     ]
+-    wandb.log({"camera_views": images_to_log}, step=0)
+-
+-    train_state, train_state_sharding = init_train_state(config, init_rng, mesh, resume=resuming)
+-    jax.block_until_ready(train_state)
+-    logging.info(f"Initialized train state:\n{training_utils.array_tree_to_info(train_state.params)}")
+-
+-    if resuming:
+-        train_state = _checkpoints.restore_state(checkpoint_manager, train_state, data_loader)
++    wandb.log({"camera_views": images_to_log}, step=start_step)
+ 
+     ptrain_step = jax.jit(
+         functools.partial(train_step, config),
+@@ -247,7 +261,6 @@ def main(config: _config.TrainConfig):
+         donate_argnums=(1,),
+     )
+ 
+-    start_step = int(train_state.step)
+     pbar = tqdm.tqdm(
+         range(start_step, config.num_train_steps),
+         initial=start_step,
+diff --git a/src/openpi/models/pi0.py b/src/openpi/models/pi0.py
+index ae7c459..00a56e0 100644
+--- a/src/openpi/models/pi0.py
++++ b/src/openpi/models/pi0.py
+@@ -190,7 +190,15 @@ class Pi0(_model.BaseModel):
+         self, rng: at.KeyArrayLike, observation: _model.Observation, actions: _model.Actions, *, train: bool = False
+     ) -> at.Float[at.Array, "*b ah"]:
+         preprocess_rng, noise_rng, time_rng = jax.random.split(rng, 3)
+-        observation = _model.preprocess_observation(preprocess_rng, observation, train=train)
++        # Some robots have fewer than the canonical three cameras.  Respect
++        # the explicit observation keys instead of forcing a masked synthetic
++        # view through the vision encoder.
++        observation = _model.preprocess_observation(
++            preprocess_rng,
++            observation,
++            train=train,
++            image_keys=list(observation.images.keys()),
++        )
+ 
+         batch_shape = actions.shape[:-2]
+         noise = jax.random.normal(noise_rng, actions.shape)
+@@ -222,7 +230,12 @@ class Pi0(_model.BaseModel):
+         num_steps: int | at.Int[at.Array, ""] = 10,
+         noise: at.Float[at.Array, "b ah ad"] | None = None,
+     ) -> _model.Actions:
+-        observation = _model.preprocess_observation(None, observation, train=False)
++        observation = _model.preprocess_observation(
++            None,
++            observation,
++            train=False,
++            image_keys=list(observation.images.keys()),
++        )
+         # note that we use the convention more common in diffusion literature, where t=1 is noise and t=0 is the target
+         # distribution. yes, this is the opposite of the pi0 paper, and I'm sorry.
+         dt = -1.0 / num_steps

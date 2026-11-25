@@ -1,0 +1,2 @@
+"""CogACT benchmark adapter."""
+

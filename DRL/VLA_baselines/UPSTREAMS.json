@@ -1,0 +1,175 @@
+{
+  "scope": "Local source revisions, not a claim of paper-recipe reproduction; no weights included",
+  "restore": "python tools/restore_upstreams.py --fetch REPO",
+  "repositories": [
+    {
+      "name": "cogact",
+      "url": "https://github.com/microsoft/CogACT.git",
+      "commit": "b174a1b86deedfab4d198d935207e7bb0527994e",
+      "untracked_source_files": []
+    },
+    {
+      "name": "dita",
+      "url": "https://github.com/RoboDita/Dita",
+      "commit": "db6907d8c0b9878570570e10d3a0599420072044",
+      "patch": {
+        "path": "upstream_patches/dita.patch",
+        "sha256": "b35d4128ca9d55f0bf8beb5b2b618df8b54423855eeba874fc1f2a8ee62fc8f6"
+      },
+      "untracked_source_files": []
+    },
+    {
+      "name": "evo1",
+      "url": "https://github.com/MINT-SJTU/Evo-1.git",
+      "commit": "5fd14b015013c4fd0aacf5f8f48f868ca9b870a2",
+      "untracked_source_files": []
+    },
+    {
+      "name": "evo_depth",
+      "url": "https://github.com/MINT-SJTU/Evo-Depth.git",
+      "commit": "617e3f901321573001a02ebb0e8e3ff8802122bd",
+      "untracked_source_files": []
+    },
+    {
+      "name": "falcon_vla",
+      "url": "https://github.com/FALCON-VLA/FALCON.git",
+      "commit": "a30c80aef8fc5e95badaa1b65ca40e25004bc87c",
+      "untracked_source_files": []
+    },
+    {
+      "name": "flower_vla",
+      "url": "https://github.com/intuitive-robots/flower_vla_calvin.git",
+      "commit": "acb32ee85719e51aa94139b184c64b1b29f11d33",
+      "untracked_source_files": []
+    },
+    {
+      "name": "flower_vla_pret",
+      "url": "https://github.com/intuitive-robots/flower_vla_pret.git",
+      "commit": "821185f1e16d9a09c3a9cf58b1caf0abac85afac",
+      "patch": {
+        "path": "upstream_patches/flower_vla_pret.patch",
+        "sha256": "486a66d0b81ddc9ef4652c27bde01d13b6f7b127bd385dc96f84738a9bccb461"
+      },
+      "untracked_source_files": []
+    },
+    {
+      "name": "gr00t_n15",
+      "url": "https://github.com/NVIDIA/Isaac-GR00T.git",
+      "commit": "4af2b622892f7dcb5aae5a3fb70bcb02dc217b96",
+      "untracked_source_files": []
+    },
+    {
+      "name": "internvla_a_series",
+      "url": "https://github.com/InternRobotics/InternVLA-A-series.git",
+      "commit": "e6fc904f9edbfb14532e97095fc2372202517f76",
+      "untracked_source_files": []
+    },
+    {
+      "name": "lerobot",
+      "url": "https://github.com/huggingface/lerobot.git",
+      "commit": "8c920c4270460851cedd2737657584586d3dc66f",
+      "untracked_source_files": []
+    },
+    {
+      "name": "lerobot_jepa",
+      "url": "https://github.com/huggingface/lerobot.git",
+      "commit": "146d8474932c8b566717eb2738ba459337ab71c4",
+      "untracked_source_files": []
+    },
+    {
+      "name": "maps_vla",
+      "url": "https://github.com/chengyuehuang511/MAPS-VLA.git",
+      "commit": "2540f0e41ddad1832bb3dd72cf64bc52077ca65f",
+      "untracked_source_files": []
+    },
+    {
+      "name": "openpi",
+      "url": "https://github.com/Physical-Intelligence/openpi.git",
+      "commit": "215abfb217dbac7d5f1273282331b9b1866c0479",
+      "patch": {
+        "path": "upstream_patches/openpi.patch",
+        "sha256": "b9339da0d2628705c850407684961bc403695e1c4fb35f4e17b279641714fea3"
+      },
+      "untracked_source_files": []
+    },
+    {
+      "name": "openvla",
+      "url": "https://github.com/openvla/openvla.git",
+      "commit": "c8f03f48af692657d3060c19588038c7220e9af9",
+      "patch": {
+        "path": "upstream_patches/openvla.patch",
+        "sha256": "96d5f93a6e46d5df8d18eb4a6cf53a0ca463e85c266426dcf8fe980e24c4b532"
+      },
+      "untracked_source_files": []
+    },
+    {
+      "name": "openvla_oft",
+      "url": "https://github.com/moojink/openvla-oft.git",
+      "commit": "e4287e94541f459edc4feabc4e181f537cd569a8",
+      "untracked_source_files": []
+    },
+    {
+      "name": "rdt",
+      "url": "https://github.com/thu-ml/RoboticsDiffusionTransformer.git",
+      "commit": "cd79363a1387e8f81c7724d070ef7e45fd23150f",
+      "untracked_source_files": [
+        {
+          "upstream_path": "configs/__init__.py",
+          "package_path": "upstream_patches/rdt/untracked/configs/__init__.py",
+          "sha256": "8122852702e6ec35a195d252646d6e621f8b824f98187ba9005246dcb8f30ed4"
+        },
+        {
+          "upstream_path": "models/__init__.py",
+          "package_path": "upstream_patches/rdt/untracked/models/__init__.py",
+          "sha256": "36a3bdf83051fbbd230310257d00c8e2049715718256d980907a8527c835f3cc"
+        },
+        {
+          "upstream_path": "models/multimodal_encoder/__init__.py",
+          "package_path": "upstream_patches/rdt/untracked/models/multimodal_encoder/__init__.py",
+          "sha256": "eda8a9fcd854cc33c87bd53763c8e321aabadc419219321758485dfa70dd7893"
+        },
+        {
+          "upstream_path": "models/rdt/__init__.py",
+          "package_path": "upstream_patches/rdt/untracked/models/rdt/__init__.py",
+          "sha256": "b9f07941afeb551ccd6a56e3285fdcfae843135a3423267de7e48cb2d8ade0f8"
+        }
+      ]
+    },
+    {
+      "name": "seer",
+      "url": "https://github.com/InternRobotics/Seer.git",
+      "commit": "ee228e110e098beefa23f94d558dfa8492259e6e",
+      "untracked_source_files": []
+    },
+    {
+      "name": "vla_adapter",
+      "url": "https://github.com/OpenHelix-Team/VLA-Adapter.git",
+      "commit": "23fa0c9c159e2aa04341cdd3e924f44061311060",
+      "untracked_source_files": []
+    },
+    {
+      "name": "vla_jepa",
+      "url": "https://github.com/ginwind/VLA-JEPA.git",
+      "commit": "ec907778b4af46a45742baf5ebfb2e055560346e",
+      "untracked_source_files": []
+    },
+    {
+      "name": "vlanext",
+      "url": "https://github.com/DravenALG/VLANeXt.git",
+      "commit": "d911e6b7b5d5615540faee8365e88da9397341b9",
+      "untracked_source_files": []
+    },
+    {
+      "name": "vlm4vla",
+      "url": "https://github.com/CladernyJorn/VLM4VLA.git",
+      "commit": "9ce02a4b1babffd8185ee1b01cae6c59a56d9764",
+      "untracked_source_files": []
+    },
+    {
+      "name": "xvla",
+      "url": "https://github.com/2toinf/X-VLA.git",
+      "commit": "6bc2513f5f1cbec715cc668b414392a6cae5c671",
+      "untracked_source_files": []
+    }
+  ]
+}

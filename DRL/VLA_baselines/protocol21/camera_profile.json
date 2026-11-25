@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "robot": "ur5e",
+  "name": "body_contact_v9_wrist65_f80_highcenter_front_candidate",
+  "wrist_frame": "tool_link",
+  "front_camera_role": "policy_workspace",
+  "grasp_candidate_scope": "all_dynamic_scene_objects",
+  "gripper_controller": "body_contact_v9",
+  "gripper_state_contract": "encoder_fk_aperture_closure_v1",
+  "native_gripper_action_kind": "requested_close_intent",
+  "pick_verification": "held_with_bilateral_contact_and_5cm_lift",
+  "derived_gripper_urdf_sha256": "9409330bb41ee1d513fd23310fe5fdd4414ea0e66c80de70682f2943d2a93e34",
+  "home_joints": [
+    1.331346979659507,
+    -1.2972310095377,
+    0.7466003004952745,
+    -1.0201642958438712,
+    4.712388644537661,
+    -0.23944941615516127
+  ],
+  "cameras": {
+    "front": {
+      "eye_world": [
+        0,
+        -1.3,
+        1
+      ],
+      "target_world": [
+        0.02,
+        -0.46,
+        0.1
+      ],
+      "up_world": [
+        0,
+        0,
+        1
+      ],
+      "fov_degrees": 42
+    },
+    "wrist": {
+      "eye_in_tool": [
+        0,
+        0.065,
+        0.045
+      ],
+      "target_in_tool": [
+        0,
+        0.065,
+        0.395
+      ],
+      "up_axis_in_tool": [
+        0,
+        1,
+        0
+      ],
+      "fov_degrees": 80
+    },
+    "overview": {
+      "eye_world": [
+        -0.65,
+        -1.8,
+        1.05
+      ],
+      "target_world": [
+        -0.02,
+        -0.46,
+        0.3
+      ],
+      "up_world": [
+        0,
+        0,
+        1
+      ],
+      "fov_degrees": 42
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "robot": "ur5e",
+  "name": "axis_side_y65_h55",
+  "wrist_frame": "tool_link",
+  "home_joints": [1.331346931380133, -1.4088377530774776, 1.16441684043747, -1.3263740823162173, 4.712388633868916, -0.2394494727112139],
+  "cameras": {
+    "front": {
+      "eye_world": [-0.65, -1.8, 1.05],
+      "target_world": [-0.02, -0.46, 0.27],
+      "up_world": [0.0, 0.0, 1.0],
+      "fov_degrees": 38.0
+    },
+    "wrist": {
+      "eye_in_tool": [0.0, 0.065, 0.045],
+      "target_in_tool": [0.0, 0.065, 0.395],
+      "up_axis_in_tool": [0.0, 1.0, 0.0],
+      "fov_degrees": 90.0
+    }
+  },
+  "requested_eye_height_m": 0.55,
+  "ik_position_residual_m": 3.9503585002092454e-08
+}

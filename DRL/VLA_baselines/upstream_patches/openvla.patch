@@ -1,0 +1,20 @@
+diff --git a/prismatic/vla/__init__.py b/prismatic/vla/__init__.py
+index 5d2af70..d9bcbe3 100644
+--- a/prismatic/vla/__init__.py
++++ b/prismatic/vla/__init__.py
+@@ -1 +1,14 @@
+-from .materialize import get_vla_dataset_and_collator
++"""VLA helpers with lazy dataset imports.
++
++Inference and custom PyTorch fine-tuning only need the action tokenizer.  The
++upstream eager import pulled in TensorFlow/dlimp even when no RLDS dataset was
++used, making the documented custom-Dataset route unusable in a lightweight
++environment.  Preserve the public factory while loading RLDS dependencies only
++when that factory is actually called.
++"""
++
++
++def get_vla_dataset_and_collator(*args, **kwargs):
++    from .materialize import get_vla_dataset_and_collator as factory
++
++    return factory(*args, **kwargs)

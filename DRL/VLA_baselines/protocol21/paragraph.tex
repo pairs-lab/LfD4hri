@@ -1,0 +1,97 @@
+\paragraph{VLA baseline implementation and fine-tuning.}
+\label{par:vla_reproducibility}
+Ten VLA baselines are adapted to Touch, Pick, Move and Put with UR5e--Robotiq
+2F-85 in PyBullet. Tables~\ref{tab:vla_adaptation}--\ref{tab:vla_optimizers} specify
+trainable components, update budgets and optimization.
+Exact weights, split IDs, calibration and recipes are fixed in
+\texttt{vla21-lock-v1.json}.
+
+\noindent\textit{Data.}
+Hashed scene-group splits reserve 2,107 original training and 477 validation
+trajectories. $D_2$ adds 38 successful corrections; $D_1$ adds 40 pose-recovery
+trajectories to $D_2$, and $D_3$ adds 152 near-miss corrections to $D_1$.
+Deviated states receive expert action labels; perturbation commands are excluded.
+Original demonstrations are retained. Tasks/targets are
+balanced; FLOWER main/$\pi_0$/VLA-JEPA use original/corrective/pose source weights
+0.50/0.15/0.35, renormalized over available sources. $D_3$ near-miss replacement
+has probability 0.35; within it, the first eight frames receive probability 0.60.
+Images/state are aligned before each action; statistics use training data only.
+Final-budget checkpoints
+are evaluated without test-based selection.
+
+\input{adaptation_table.tex}
+
+\noindent\textit{Observations.}
+Each policy receives the instruction, external/wrist RGB and an ordered 21-D
+robot/interaction vector: joint angles (6), measured gripper closure (1),
+pad-centre position (3), preceding gripper command (1), tool rotation (6), jaw
+aperture (1), left/right pad-contact indicators (2) and total pad normal force (1).
+Positions use world-frame metres, joints radians and force newtons; tool rotation
+stacks the first two tool-to-world matrix columns. Closure is
+in $[0,1]$ and the preceding command in $[-1,1]$, positive for closing.
+At each query, each contact bit is one if that pad's summed external-contact
+normal force exceeds 0.1\,N; the force channel sums both pads without object
+identity filtering. Continuous channels use training mean/std with a
+$10^{-6}$ standard-deviation floor; the two contact bits remain unchanged.
+
+FLOWER, SmolVLA and VLA-JEPA project the 21-D vector directly. X-VLA prepends
+its native 20-D state (10 active-arm pose/closure channels and 10 zeros), giving
+41 dimensions. VLA-Adapter prepends end-effector XYZ, rotation vector and
+half-apertures $(d/2,-d/2)$ ($d$: jaw aperture), giving 29 dimensions.
+Dita/VLANeXt-S prepend XYZ, rotation vector and closure (28-D total).
+Seer projects a separate 7-D XYZ/Euler/open-state
+prefix and the 21-D vector. Native rotation/preprocessing conventions are
+retained. $\pi_0$ pads the normalized state with eleven zeros and serializes
+the same raw 21 fields to four decimals. Native prefix weights are preserved;
+new conditioning columns, or the output layer of a new residual branch,
+are zero-initialized.
+
+Only two RGB views are supplied. FALCON-ESM also receives metric front depth and
+camera calibration, transformed with image crop/resize. RGB inputs are
+$384\times384$, processed to $224\times224$ except SmolVLA ($512\times512$)
+and VLANeXt-S ($256\times256$). Dita uses two image/state timestamps, Seer seven,
+and VLANeXt-S eight state timestamps with current images; others use one.
+History uses 10\,Hz samples including the current observation; reset padding
+repeats the initial observation.
+
+\noindent\textit{Initialization and training.}
+Released checkpoint IDs and hashes are fixed in the lock. Notable choices are
+FLOWER's 12-block variant, VLA-Adapter LIBERO-Spatial-Pro and VLANeXt-S's
+Qwen3.5-0.8B initialization rather than pretrained robot action modules.
+Unlisted components are frozen. LoRA uses $\alpha/r=2$ for
+FLOWER, X-VLA, VLA-Adapter and FALCON-ESM.
+X-VLA trains LoRA/prompts/action modules jointly instead of its published
+initial prompt/head-only stage; VLA-JEPA uses
+action-only training with frozen Qwen, no world-model loss and standardized
+Euler-delta targets rather than min--max-scaled axis--angle targets.
+
+Flow policies use action flow matching; VLA-Adapter uses $L_1$;
+Dita uses masked diffusion-noise mean-squared error (MSE); FALCON-ESM uses masked arm Huber plus
+0.01 gripper binary cross-entropy (BCE) with logits. Seer uses arm smooth-$L_1$
+plus 0.01 gripper BCE and 0.1 image MSE at $t+3$; future images are training
+targets only. VLANeXt-S adds discrete-cosine-transform regularization (0.1).
+Dita uses brightness jitter, VLANeXt-S crop/colour jitter and Seer temporally
+consistent shifts; ranges are fixed in the lock. Inference uses four
+sampling steps for FLOWER/VLA-JEPA and ten for X-VLA/$\pi_0$/SmolVLA/VLANeXt-S;
+Dita uses 100 training noise levels and ten inference steps.
+$\pi_0$ uses JAX/OpenPI; VLANeXt-S uses AdamW8bit with mixed BF16/FP32 parameters;
+other trainable master weights/moments are FP32.
+
+\input{optimizer_table.tex}
+
+\noindent\textit{Execution.}
+The shared $\Delta7$ action is world-frame XYZ translation (m), local XYZ Euler
+increments (rad) and gripper command ($-1$ open, $+1$ close). Arm-action scaling
+uses training 1st/99th percentiles for FLOWER/VLA-Adapter/Dita/VLANeXt-S,
+mean/std for $\pi_0$/SmolVLA/VLA-JEPA, and percentiles mapped to $[-0.65,0.65]$
+for FALCON-ESM. Native gripper conventions are converted to this interface.
+X-VLA predicts absolute 20-D pose/closure; the active arm is converted against
+the measured end-effector pose at each executed step. Seer's local increments
+are anchored to the preceding requested pose, not the current measured pose.
+The command rate is 10\,Hz with 240\,Hz physics (24 substeps/command).
+$H$ denotes predicted chunk length and $K$ the number executed before querying
+again; thus the query rate is $10/K$\,Hz. Remaining predictions are discarded;
+no temporal ensembling is used. The shared inverse-kinematics servo clips
+translation/rotation increments to $\pm0.05$\,m/$\pm0.25$\,rad and retains the
+common safety checks and contact-qualified grasp constraint; executor sources
+are hash-bound in the lock.

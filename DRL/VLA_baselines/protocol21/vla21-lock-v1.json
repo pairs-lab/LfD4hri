@@ -1,0 +1,1066 @@
+{
+  "version": "vla21-lock-v1",
+  "date": "2026-11-24",
+  "policy_state_dim": 21,
+  "immutable_protocol": true,
+  "full_native_runner_implementation_completed": false,
+  "measured_results_for_this_protocol": null,
+  "decision": {
+    "include_object_goal_offsets": false,
+    "reason": "They directly provide task localization; cannot defend a claim of negligible effect."
+  },
+  "observation": {
+    "order": [
+      "q1_rad",
+      "q2_rad",
+      "q3_rad",
+      "q4_rad",
+      "q5_rad",
+      "q6_rad",
+      "closure01",
+      "pad_midpoint_world_x_m",
+      "pad_midpoint_world_y_m",
+      "pad_midpoint_world_z_m",
+      "previous_signed_close",
+      "tool_R11",
+      "tool_R21",
+      "tool_R31",
+      "tool_R12",
+      "tool_R22",
+      "tool_R32",
+      "surface_jaw_gap_m",
+      "left_external_contact",
+      "right_external_contact",
+      "total_pad_normal_force_N"
+    ],
+    "binary_indices": [
+      18,
+      19
+    ],
+    "contact_force_threshold_N": 0.1,
+    "force_scope": "sum normal forces over each pad and all external non-self bodies, including wrong objects; no task-body filter",
+    "contact_sample": "last completed physics step immediately before the current control action",
+    "FK_frame": "URDF tool link frame getLinkState[4]/[5], not inertial COM",
+    "pad_midpoint": "mean of the two calibrated pad surface centroids in world coordinates",
+    "aperture": "surface-to-surface aperture along jaw axis, not centroid distance",
+    "closure": "1-clip((aperture-0.0063742693)/(0.0885956060-0.0063742693),0,1)",
+    "previous_command_at_reset": -1.0,
+    "additional_state_images": false,
+    "normalization": {
+      "ddof": 0,
+      "std_floor": 1e-06,
+      "fit": "unique TRAIN timesteps before oversampling",
+      "binary_unchanged": true,
+      "clip": null,
+      "D3_stats": "reuse D1 robot21 statistics; do not reuse old-width statistics"
+    },
+    "pi0_text": "raw named21 values in listed order, four decimals; same task instruction; no other state fields",
+    "numeric_padding": {
+      "pi0": "normalize21 then append11 zeros",
+      "xvla_dummy_arm": "10 zeros"
+    },
+    "native_prefixes": {
+      "X-VLA": "world EEF XYZ3, R[:,:2].reshape(6) interleaved, closure01, ten zeros; physical values",
+      "VLA-Adapter": "world EEF XYZ3, rotvec3 branch nearest home(0,pi,0), half-apertures(+d/2,-d/2); TRAIN q01/q99 normalization",
+      "Dita/VLANeXt-S": "world EEF XYZ3, same continuous rotvec3, measured closure01; physical prefix",
+      "Seer": "world EEF XYZ3, principal Euler xyz3, binary open=(closure01<0.5); separate state21 branch"
+    },
+    "projector_initialization": {
+      "native_prefixes": "preserve semantically matching pretrained prefix columns and downstream weights; append21 zero columns",
+      "replaced_direct_input_linear": "zero new input weight, preserve compatible bias and nonzero downstream pretrained layers",
+      "new_MLP_branch": "hidden Linear Kaiming-uniform as nn.Linear default; zero final Linear only; never zero every layer"
+    },
+    "reference": "state21_reference.py"
+  },
+  "data": {
+    "counts": {
+      "D1": {
+        "trajectories": 2185,
+        "timesteps": 119495,
+        "per_action_trajectories": {
+          "touch": 547,
+          "pick": 546,
+          "move": 546,
+          "pick_place": 546
+        },
+        "per_action_timesteps": {
+          "touch": 30970,
+          "pick": 25361,
+          "move": 30534,
+          "pick_place": 32630
+        },
+        "source_kinds": {
+          "complete_original": 2107,
+          "fresh_corrective": 38,
+          "pose_corrective": 40
+        },
+        "missing_files": {},
+        "missing_examples": {},
+        "payload_hash_checks": {
+          "RGB_source_match": 2185,
+          "numeric_cache_match": 2185
+        },
+        "index_sha256": "9ae7f44d42dd597254d4e40ee57491a77e55f52c26717cc1f39203d44e1f8d35"
+      },
+      "D2": {
+        "trajectories": 2145,
+        "timesteps": 117736,
+        "per_action_trajectories": {
+          "touch": 537,
+          "pick": 536,
+          "move": 536,
+          "pick_place": 536
+        },
+        "per_action_timesteps": {
+          "touch": 30488,
+          "pick": 25002,
+          "move": 30100,
+          "pick_place": 32146
+        },
+        "source_kinds": {
+          "complete_original": 2107,
+          "fresh_corrective": 38
+        },
+        "missing_files": {},
+        "missing_examples": {},
+        "payload_hash_checks": {
+          "RGB_source_match": 2145,
+          "numeric_cache_match": 2145
+        },
+        "index_sha256": "e8897eac99dacb9b6c4929f3b389b9f25d9290391e6b80688b6f4ffe3f51651d"
+      },
+      "validation": {
+        "trajectories": 477,
+        "timesteps": 26837,
+        "per_action_trajectories": {
+          "touch": 119,
+          "pick": 119,
+          "move": 119,
+          "pick_place": 120
+        },
+        "per_action_timesteps": {
+          "touch": 6864,
+          "pick": 5633,
+          "move": 6895,
+          "pick_place": 7445
+        },
+        "source_kinds": {
+          "validation": 477
+        },
+        "missing_files": {},
+        "missing_examples": {},
+        "payload_hash_checks": {
+          "RGB_source_no_indexed_hash": 477
+        },
+        "index_sha256": "d22f5e1033ae47bf640fa397599e933fc77465503a8f4262db301ef7f2681d0c"
+      }
+    },
+    "D3": {
+      "trajectories": 2337,
+      "timesteps": 125527,
+      "per_action_timesteps": [
+        32736,
+        26521,
+        31992,
+        34278
+      ],
+      "additional_rows": 152,
+      "additional_timesteps": 6032,
+      "additional_per_action_trajectories": {
+        "touch": 38,
+        "pick": 38,
+        "move": 38,
+        "pick_place": 38
+      },
+      "index_sha256": "e71f4f383b2d5f503d1b939b207fb6b2022154b62a73eb6a7fec34e131d887e9",
+      "parent": "D1",
+      "original_statistics_preserved": true
+    },
+    "indices": {
+      "D1": {
+        "path": "data_indices/D1.json",
+        "sha256": "9ae7f44d42dd597254d4e40ee57491a77e55f52c26717cc1f39203d44e1f8d35",
+        "rows": 2185,
+        "timesteps": 119495,
+        "role": "identity index; image/state/action payloads must be transferred separately"
+      },
+      "D2": {
+        "path": "data_indices/D2.json",
+        "sha256": "e8897eac99dacb9b6c4929f3b389b9f25d9290391e6b80688b6f4ffe3f51651d",
+        "rows": 2145,
+        "timesteps": 117736,
+        "role": "identity index; image/state/action payloads must be transferred separately"
+      },
+      "D3_extra": {
+        "path": "data_indices/D3_extra.json",
+        "sha256": "e71f4f383b2d5f503d1b939b207fb6b2022154b62a73eb6a7fec34e131d887e9",
+        "rows": 152,
+        "timesteps": 6032,
+        "role": "identity index; image/state/action payloads must be transferred separately"
+      },
+      "VAL": {
+        "path": "data_indices/VAL.json",
+        "sha256": "d22f5e1033ae47bf640fa397599e933fc77465503a8f4262db301ef7f2681d0c",
+        "rows": 477,
+        "timesteps": 26837,
+        "role": "identity index; image/state/action payloads must be transferred separately"
+      }
+    },
+    "split": "exact supplied scene-group lists; never randomly resplit on another machine",
+    "success_filter": true,
+    "new_required_payload": "aligned raw_state21.float32 Nx21; generic contacts/forces must be newly logged/reconstructed and verified",
+    "forbidden_shortcut": "do not rename target-filtered old contact/force fields as generic pad feedback",
+    "samplers": "preserve the snapshotted per-stage sampler functions; their private training labels do not enter model inputs"
+  },
+  "foundation_sources": {
+    "X-VLA": {
+      "repo": "lerobot/xvla-base",
+      "revision": "cdb7964e4fe842935d671bfab5a5ebe00a96648c",
+      "code_commit": "6bc2513f5f1cbec715cc668b414392a6cae5c671",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1519,
+          "lfs_sha256": null
+        },
+        {
+          "name": "README.md",
+          "size": 4667,
+          "lfs_sha256": null
+        },
+        {
+          "name": "config.json",
+          "size": 5463,
+          "lfs_sha256": null
+        },
+        {
+          "name": "model.safetensors",
+          "size": 3519073692,
+          "lfs_sha256": "f05bc0fab1c9523d7f5d6b41a651313641ca2227a88822249845da8e20e036c9"
+        },
+        {
+          "name": "policy_postprocessor.json",
+          "size": 575,
+          "lfs_sha256": null
+        },
+        {
+          "name": "policy_preprocessor.json",
+          "size": 2078,
+          "lfs_sha256": null
+        }
+      ],
+      "intended_variant": "additional_privileged_domain_adaptation_NOT_published_benchmark_result",
+      "created_at_utc": "2026-10-16T04:32:41.674243+00:00"
+    },
+    "VLA-Adapter": {
+      "repo": "VLA-Adapter/LIBERO-Spatial-Pro",
+      "revision": "cb023c6771fc62ea729d218f09ac0583c14f59d4",
+      "code_commit": "23fa0c9c159e2aa04341cdd3e924f44061311060",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1519,
+          "lfs_sha256": null
+        },
+        {
+          "name": "Inference--Spatial_Pro--99.6.log",
+          "size": 658818,
+          "lfs_sha256": null
+        },
+        {
+          "name": "README.md",
+          "size": 9096,
+          "lfs_sha256": null
+        },
+        {
+          "name": "action_head--checkpoint.pt",
+          "size": 435954570,
+          "lfs_sha256": "76aa486231ebce057aa398dc5fcecf71698b293bdcc16d7354e1ac8cb807bdb9"
+        },
+        {
+          "name": "added_tokens.json",
+          "size": 605,
+          "lfs_sha256": null
+        },
+        {
+          "name": "config.json",
+          "size": 61143,
+          "lfs_sha256": null
+        },
+        {
+          "name": "configuration_prismatic.py",
+          "size": 6020,
+          "lfs_sha256": null
+        },
+        {
+          "name": "dataset_statistics.json",
+          "size": 2957,
+          "lfs_sha256": null
+        },
+        {
+          "name": "generation_config.json",
+          "size": 146,
+          "lfs_sha256": null
+        },
+        {
+          "name": "merges.txt",
+          "size": 1671853,
+          "lfs_sha256": null
+        },
+        {
+          "name": "model.safetensors",
+          "size": 2505232584,
+          "lfs_sha256": "5d70e76161d92fa962c53e78e10b4af3426b6ec7e5c0ea872e7a8162c961a8d3"
+        },
+        {
+          "name": "modeling_prismatic.py",
+          "size": 69036,
+          "lfs_sha256": null
+        },
+        {
+          "name": "preprocessor_config.json",
+          "size": 1650,
+          "lfs_sha256": null
+        },
+        {
+          "name": "processing_prismatic.py",
+          "size": 12718,
+          "lfs_sha256": null
+        },
+        {
+          "name": "processor_config.json",
+          "size": 130,
+          "lfs_sha256": null
+        },
+        {
+          "name": "proprio_projector--checkpoint.pt",
+          "size": 1626096,
+          "lfs_sha256": "1c61a08975ffade832a2dbfa0587ef6b109ec27f66eb8124f02727aa9827008e"
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 616,
+          "lfs_sha256": null
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 7031673,
+          "lfs_sha256": null
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 7356,
+          "lfs_sha256": null
+        },
+        {
+          "name": "vocab.json",
+          "size": 2776833,
+          "lfs_sha256": null
+        }
+      ],
+      "intended_variant": "additional_privileged_domain_adaptation_NOT_published_benchmark_result",
+      "created_at_utc": "2026-10-16T04:32:41.721036+00:00"
+    },
+    "pi0": {
+      "source": "gs://openpi-assets/checkpoints/pi0_base/params",
+      "implementation": "Physical-Intelligence/openpi"
+    },
+    "SmolVLA": {
+      "repo": "lerobot/smolvla_base",
+      "revision": "5e8d12a6e2975b0e5e5fce7c8caf47c371d257b6",
+      "revision_origin": "public HF API checked2026-11-24 for this new protocol; not a reconstructed historical pin"
+    },
+    "FLOWER": {
+      "source": "360000_model_weights.pt",
+      "flow_blocks": 12,
+      "base_weights_sha256": "f654fe4adc6a348e9c06424a3444fddf700820818b0b81b917db0ccec94eff60",
+      "repo": "https://github.com/intuitive-robots/flower_vla_pret",
+      "code_commit": "821185f1e16d9a09c3a9cf58b1caf0abac85afac"
+    },
+    "VLA-JEPA": {
+      "revision": "e946c3e5b538d760f4b4ff239d1b1c12090c041d",
+      "base_weights_sha256": "7872e3f4d805d81382b7bde4c394041fbda5776e024906d20c249288d38e30ed",
+      "source": "lerobot/VLA-JEPA-Pretrain"
+    },
+    "Dita": {
+      "repo": "https://github.com/RoboDita/Dita",
+      "code_commit": "db6907d8c0b9878570570e10d3a0599420072044",
+      "file": "official_oxe_policy.pth",
+      "google_drive_file_id": "1jaaoT0QGX4xwdzvTr_ki8OJ9-XkNOvub",
+      "sha256": "c831d427a662a6d12249b592e0dff3ef37c9e8f67eb2460a1a6d49326800201f"
+    },
+    "VLANeXt-S": {
+      "repo": "https://github.com/DravenALG/VLANeXt",
+      "code_commit": "d911e6b7b5d5615540faee8365e88da9397341b9",
+      "backbone": "Qwen/Qwen3.5-0.8B",
+      "backbone_revision": "2fc06364715b967f1860aea9cf38778875588b17"
+    },
+    "FALCON-ESM": {
+      "repo": "https://github.com/FALCON-VLA/FALCON",
+      "code_commit": "902eec199093478b500edd2cde2d8728c556d5de",
+      "file": "falcon_esm_fc_calvin_abc_wdepth.pt",
+      "sha256": "9f026a7bd00a154e7db061398753737003f97e89aa2c111b87070e9afd3d4160"
+    },
+    "Seer": {
+      "repo": "https://github.com/InternRobotics/Seer",
+      "code_commit": "ee228e110e098beefa23f94d558dfa8492259e6e",
+      "file": "seer_droid.pth",
+      "google_drive_file_id": "147GmrVGR_oDq9abhCAkoyJil_mVZ_SRh",
+      "sha256": "cf10d79ca39b3c92e8df6a01c6e1c95d4be235009bac1cd82ed2514b60318210",
+      "other_encoders": [
+        "MAE ViT-B:mae_pretrain_vit_base.pth",
+        "CLIP ViT-B/32"
+      ]
+    }
+  },
+  "models": {
+    "FLOWER": {
+      "total": 4224,
+      "beta2": 0.95,
+      "wd": 0.05,
+      "clip": 1,
+      "history": 1,
+      "state": 21,
+      "stages": [
+        {
+          "updates": 4096,
+          "effective_batch": 16,
+          "peak_lr": [
+            1e-05,
+            2e-05
+          ],
+          "warmup_optimizer_updates": 128,
+          "end_lr": [
+            5e-06,
+            1e-05
+          ],
+          "schedule_horizon": 4096,
+          "data": "D1"
+        },
+        {
+          "updates": 128,
+          "effective_batch": 16,
+          "peak_lr": [
+            2e-06,
+            4e-06
+          ],
+          "warmup_optimizer_updates": 0,
+          "end_lr": [
+            2e-06,
+            4e-06
+          ],
+          "schedule_horizon": 128,
+          "data": "D1",
+          "fresh_optimizer": true
+        }
+      ],
+      "preceding_qualification": {
+        "updates": 2,
+        "batch": 4,
+        "lr": [
+          1e-05,
+          2e-05
+        ],
+        "included_in_table": false
+      },
+      "H": 10,
+      "K": 10,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "X-VLA": {
+      "total": 14500,
+      "beta2": 0.99,
+      "wd": 0,
+      "clip": 10,
+      "history": 1,
+      "state": 41,
+      "stages": [
+        {
+          "updates": 7000,
+          "effective_batch": 4,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 200,
+          "end_lr": 1e-05,
+          "schedule_horizon": 7000,
+          "data": "D2"
+        },
+        {
+          "updates": 7500,
+          "effective_batch": 4,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 200,
+          "end_lr": 1e-05,
+          "schedule_horizon": 14500,
+          "data": "D1",
+          "cumulative_schedule": true
+        }
+      ],
+      "H": 30,
+      "K": 30,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "pi0": {
+      "total": 3000,
+      "beta2": 0.95,
+      "wd": 1e-10,
+      "clip": 1,
+      "history": 1,
+      "state": 32,
+      "stages": [
+        {
+          "updates": 3000,
+          "effective_batch": 4,
+          "peak_lr": 2.5e-05,
+          "warmup_optimizer_updates": 100,
+          "end_lr": 2.5e-06,
+          "schedule_horizon": 3000,
+          "data": "D1"
+        }
+      ],
+      "implementation": "OpenPI/JAX",
+      "EMA": false,
+      "H": 5,
+      "K": 4,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "VLA-Adapter": {
+      "total": 6000,
+      "beta2": 0.99,
+      "wd": 0,
+      "clip": 10,
+      "history": 1,
+      "state": 29,
+      "stages": [
+        {
+          "updates": 6000,
+          "effective_batch": 4,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 200,
+          "end_lr": 1e-05,
+          "schedule_horizon": 6000,
+          "data": "D2"
+        }
+      ],
+      "H": 8,
+      "K": 8,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "SmolVLA": {
+      "total": 22500,
+      "beta2": 0.95,
+      "wd": 1e-10,
+      "clip": 10,
+      "history": 1,
+      "state": 21,
+      "stages": [
+        {
+          "updates": 10000,
+          "effective_batch": 32,
+          "peak_lr": 5e-05,
+          "warmup_optimizer_updates": 1000,
+          "end_lr": 1.25e-06,
+          "schedule_horizon": 10000,
+          "data": "D2",
+          "microbatch": 2,
+          "accumulation": 16
+        },
+        {
+          "updates": 5000,
+          "effective_batch": 32,
+          "peak_lr": 2.5e-05,
+          "warmup_optimizer_updates": 250,
+          "end_lr": 6.25e-07,
+          "schedule_horizon": 5000,
+          "data": "D2",
+          "microbatch": 2,
+          "accumulation": 16
+        },
+        {
+          "updates": 5000,
+          "effective_batch": 16,
+          "peak_lr": 2.5e-05,
+          "warmup_optimizer_updates": 250,
+          "end_lr": 6.25e-07,
+          "schedule_horizon": 5000,
+          "data": "D2",
+          "microbatch": 2,
+          "accumulation": 8
+        },
+        {
+          "updates": 2500,
+          "effective_batch": 8,
+          "peak_lr": 2.5e-05,
+          "warmup_optimizer_updates": 150,
+          "end_lr": 6.25e-07,
+          "schedule_horizon": 2500,
+          "data": "D2",
+          "microbatch": 2,
+          "accumulation": 4
+        }
+      ],
+      "schedule_counter": "source scheduler runs on microsteps; values here are optimizer-equivalent",
+      "H": 5,
+      "K": 5,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "VLA-JEPA": {
+      "total": 2500,
+      "beta2": 0.95,
+      "wd": 1e-10,
+      "clip": 10,
+      "history": 1,
+      "state": 21,
+      "stages": [
+        {
+          "updates": 2500,
+          "effective_batch": 4,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 100,
+          "end_lr": 1e-05,
+          "schedule_horizon": 2500,
+          "data": "D1",
+          "qualification_updates_included": 2
+        }
+      ],
+      "schedule_formula_authority": "recipe_sources/VLA/extension_r65/train_jepa.py",
+      "loss": "action flow only; frozen Qwen; no world auxiliary loss",
+      "inference_sampling_steps": 4,
+      "H": 7,
+      "K": 7,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "Dita": {
+      "total": 10000,
+      "beta2": 0.95,
+      "wd": 0.05,
+      "clip": 1,
+      "history": 2,
+      "state": 28,
+      "stages": [
+        {
+          "updates": 10000,
+          "effective_batch": 32,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 100,
+          "end_lr": 1e-06,
+          "schedule_horizon": 10000,
+          "data": "D1",
+          "DINO_lr_multiplier": 0.1
+        }
+      ],
+      "weight_decay_exclude": [
+        "bias",
+        "norm"
+      ],
+      "schedule_formula_authority": "recipe_sources/VLA/dita_transfer_r84/train.py",
+      "H": 10,
+      "K": 1,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "VLANeXt-S": {
+      "total": 9728,
+      "beta2": 0.999,
+      "wd": 0.1,
+      "clip": 1,
+      "history": 8,
+      "state": 28,
+      "optimizer": "AdamW8bit",
+      "stages": [
+        {
+          "updates": 8192,
+          "effective_batch": 16,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 1000,
+          "end_lr": 1e-06,
+          "schedule_horizon": 20000,
+          "data": "D1"
+        },
+        {
+          "updates": 1024,
+          "effective_batch": 16,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 1000,
+          "end_lr": 1e-06,
+          "schedule_horizon": 20000,
+          "data": "D3",
+          "continue_schedule": true
+        },
+        {
+          "updates": 512,
+          "effective_batch": 32,
+          "peak_lr": 2e-05,
+          "warmup_optimizer_updates": 16,
+          "end_lr": 1e-06,
+          "schedule_horizon": 512,
+          "data": "D3",
+          "continue_moments": true
+        }
+      ],
+      "schedule_formula_authorities": [
+        "recipe_sources/VLA/replacement_r84/train.py",
+        "recipe_sources/VLA/refinement_r99/train.py"
+      ],
+      "H": 8,
+      "K": 1,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "FALCON-ESM": {
+      "total": 2050,
+      "beta2": 0.999,
+      "wd": 0,
+      "clip": 1,
+      "history": 1,
+      "state": 21,
+      "stages": [
+        {
+          "updates": 2048,
+          "effective_batch": 16,
+          "peak_lr": 5e-05,
+          "warmup_optimizer_updates": 64,
+          "end_lr": 5e-06,
+          "schedule_horizon": 4096,
+          "data": "D3"
+        }
+      ],
+      "preceding_qualification": {
+        "updates": 2,
+        "batch": 4,
+        "lr": 0.0001,
+        "wd": 0.0001,
+        "included_in_table": true
+      },
+      "H": 10,
+      "K": 1,
+      "beta1": 0.9,
+      "eps": 1e-08
+    },
+    "Seer": {
+      "total": 4098,
+      "beta2": 0.999,
+      "wd": 0.0001,
+      "clip": 1,
+      "history": 7,
+      "state": {
+        "native": 7,
+        "robot": 21
+      },
+      "stages": [
+        {
+          "updates": 4096,
+          "effective_batch": 16,
+          "peak_lr": 0.0001,
+          "warmup_optimizer_updates": 64,
+          "end_lr": 1e-05,
+          "schedule_horizon": 4096,
+          "data": "D3"
+        }
+      ],
+      "preceding_qualification": {
+        "updates": 2,
+        "batch": 4,
+        "lr": 0.0001,
+        "wd": 0.0001,
+        "included_in_table": true
+      },
+      "H": 3,
+      "K": 1,
+      "beta1": 0.9,
+      "eps": 1e-08
+    }
+  },
+  "images": {
+    "profile": "camera_profile.json",
+    "raw_resolution": [
+      384,
+      384
+    ],
+    "renderer": "ER_TINY_RENDERER",
+    "near_far_m": [
+      0.01,
+      3.0
+    ],
+    "roles": [
+      "front",
+      "wrist"
+    ],
+    "resize": {
+      "default": [
+        224,
+        224
+      ],
+      "SmolVLA": [
+        512,
+        512
+      ],
+      "VLANeXt-S": [
+        256,
+        256
+      ]
+    },
+    "no_image_augmentation": [
+      "FLOWER",
+      "X-VLA",
+      "pi0",
+      "VLA-Adapter",
+      "SmolVLA",
+      "VLA-JEPA",
+      "FALCON-ESM"
+    ],
+    "augmentations": {
+      "Dita": {
+        "brightness": [
+          0.9,
+          1.1
+        ]
+      },
+      "VLANeXt-S": {
+        "crop_area": [
+          0.8,
+          1.0
+        ],
+        "crop_ratio": [
+          0.9,
+          1.1
+        ],
+        "brightness": [
+          0.8,
+          1.2
+        ],
+        "contrast": [
+          0.8,
+          1.2
+        ],
+        "saturation": [
+          0.8,
+          1.2
+        ],
+        "hue": [
+          -0.05,
+          0.05
+        ]
+      },
+      "Seer": {
+        "replicate_pad_front": 10,
+        "replicate_pad_wrist": 4,
+        "one_shift_per_stream_shared_over_history_and_future_labels": true
+      }
+    },
+    "falcon_depth": "actual calibrated front metric depth; native spatial branch remains enabled; transform K and extrinsics with crop"
+  },
+  "action": {
+    "channels": [
+      "dx",
+      "dy",
+      "dz",
+      "droll",
+      "dpitch",
+      "dyaw",
+      "signed_close"
+    ],
+    "translation_frame": "world",
+    "rotation_frame": "local EEF xyz Euler, R_target=R_measured@R_xyz(delta)",
+    "translation_clip_m": 0.05,
+    "rotation_clip_rad": 0.25,
+    "control_hz": 10,
+    "physics_hz": 240,
+    "temporal_ensembling": false,
+    "discard_chunk_after_K": true,
+    "gripper_native": {
+      "FLOWER": "OPEN01",
+      "X-VLA": "CLOSE01",
+      "pi0": "CLOSE01",
+      "VLA-Adapter": "OPEN01",
+      "SmolVLA": "signed_close",
+      "VLA-JEPA": "signed_close",
+      "Dita": "OPEN01",
+      "VLANeXt-S": "signed_close",
+      "FALCON-ESM": "OPEN01",
+      "Seer": "signed_open"
+    },
+    "gripper_decode": {
+      "OPEN01": "g=1-2*native",
+      "CLOSE01": "g=2*native-1",
+      "signed_close": "g=native",
+      "signed_open": "g=-native"
+    },
+    "xvla": "physical active-arm absolute pose, native interleaved rotation6D; convert against latest measured EEF at each executed step",
+    "seer": "compose local increments with previous requested pose; at reset anchor=measured pose",
+    "seer_scales": "sharedXYZ= max(.02,1.05*TRAIN max_absXYZ); sharedEuler=max(.05,1.05*TRAIN max_absEuler)",
+    "servo": "same snapshotted common IK/position/safety and body-contact grasp implementation; no action repair policy"
+  },
+  "run_contract": {
+    "training_seed": 0,
+    "seed_status": "new prospective lock choice, not claimed as historical seed",
+    "optimizer_update_definition": "one optimizer.step after gradient accumulation, not microsteps/frames/epochs",
+    "final_checkpoint": "the stated final-stage budget endpoint; no test-based selection or retuning",
+    "resume": "within one21-D run, carry model/optimizer/RNG state across continuations; FLOWER rehearsal explicitly starts a fresh optimizer",
+    "existing_old_width_weights": "foundation initialization only; do not count prior old-width adaptation as completed21-D updates",
+    "before_training": [
+      "verify dataset/split/checkpoint bytes",
+      "export and validate21-D aligned logs",
+      "instantiate every native21-D input adapter",
+      "finite-gradient step and checkpoint reload parity",
+      "freeze dependencies and no-look test cohort"
+    ],
+    "evaluation": "success predicates, thresholds and held-out scene seeds must match the separately declared paper evaluation protocol; not inferred from adaptation tables"
+  },
+  "frozen_recipe_sources": [
+    {
+      "path": "recipe_sources/VLA/fit_feedback_r52.py",
+      "sha256": "6e2b957ed24f83519992f38c21ed79945ec8af7446ad5c01f4cda570f0100d31"
+    },
+    {
+      "path": "recipe_sources/VLA/family_transfer_r54/data.py",
+      "sha256": "a915e828b5d594f1cfbab97cf338ae117dcbd849242993393270cdfac5511993"
+    },
+    {
+      "path": "recipe_sources/VLA/flower_rotation_r76/sampler.py",
+      "sha256": "b6d73efd115aae5823ca3858a471d6c2a5060262ee2f7c9f50735afc7c7ec68d"
+    },
+    {
+      "path": "recipe_sources/VLA/flower_r71/sampler.py",
+      "sha256": "d44ece5b81cafddbbc75b7b9084c3a1118cd937cfa1c481d7f30939eafa2a773"
+    },
+    {
+      "path": "recipe_sources/VLA/target_balance_r74/sampler.py",
+      "sha256": "b8e257fe045b507f2e074058adaee4454a8a8e00f2ee5a4a7e097f4c207252ba"
+    },
+    {
+      "path": "recipe_sources/VLA/recovery_quality_r90/data.py",
+      "sha256": "e7a50d3e5d929b9b7478a59e3ef15141c63a222bd60080c1b36c7d326df179d0"
+    },
+    {
+      "path": "recipe_sources/VLA/refinement_r99/data.py",
+      "sha256": "b4ffb0789e793879da113eb85b0688bf4cb1aadb3e168097d2622ef587969bce"
+    },
+    {
+      "path": "recipe_sources/VLA/new_vlas/train.py",
+      "sha256": "d67f80bb1c135c56cf4f40e866b17e9cc8cfe599d7eaf8116ee39adb5c959554"
+    },
+    {
+      "path": "recipe_sources/VLA/stable_native_r44/fit_balanced.py",
+      "sha256": "94bb02878dfd48f603c0d4a756c3358778470185214e731d0002533bd930428c"
+    },
+    {
+      "path": "recipe_sources/VLA/new_vlas/action_contracts.py",
+      "sha256": "d4c08d81895b36e325e42ecbbafc43df1fd96e7de97944193ac8c3f88d50309d"
+    },
+    {
+      "path": "recipe_sources/VLA/flower_r69/gate.py",
+      "sha256": "18f36b97cdda5cdf5fbd2e25be0fb5927055330453c5bf841a8774a1cf98c570"
+    },
+    {
+      "path": "recipe_sources/VLA/flower_r69/fit.py",
+      "sha256": "b080fa2fc04635e147137f40063cb484e5f574254feb164a3d1a17e00bd4a3f7"
+    },
+    {
+      "path": "recipe_sources/VLA/flower_r71/fit.py",
+      "sha256": "350abaa4d4931b6a733fc53a7144064a0735f264f9ac17569b80fdb385523826"
+    },
+    {
+      "path": "recipe_sources/VLA/flower_rotation_r76/fit.py",
+      "sha256": "3415a2a5955b4f3c06da30694d0cfc49492ad8f7908ceb5ce8ecdcef63bd3e52"
+    },
+    {
+      "path": "recipe_sources/VLA/family_transfer_r54/pi0.py",
+      "sha256": "aa08fb901e16cdb791c39d53b0c70dda775ebd2928ac5307260704881b5511eb"
+    },
+    {
+      "path": "recipe_sources/VLA/family_transfer_r54/fit_pi0.py",
+      "sha256": "688e88c6085e470b6dff51493ebab3a4d9988f74409f6e2e0f9d40f481e8d434"
+    },
+    {
+      "path": "recipe_sources/VLA/extension_r65/train_jepa.py",
+      "sha256": "9cd6560651acc4ad718a76d7e9d757af792c8cfa4d25ded0e14356a305f162d4"
+    },
+    {
+      "path": "recipe_sources/VLA/dita_transfer_r84/train.py",
+      "sha256": "26733baf2b2caae51facb27852ef109a3fd3ff2b71702dcdb7e3831ef0b6a10c"
+    },
+    {
+      "path": "recipe_sources/VLA/replacement_r84/train.py",
+      "sha256": "6ab65e6b4031896366cf33bd391cd700b9a68895625bc571e0ca7f0e6c402dbd"
+    },
+    {
+      "path": "recipe_sources/VLA/refinement_r99/train.py",
+      "sha256": "9c523ff98be7da5d87ff5993efe1420d1a19335755cb8e29271169e256c8f25f"
+    },
+    {
+      "path": "recipe_sources/VLA/admission_r100/train.py",
+      "sha256": "b7eaed8e306ad4e24cb6209c195f8e38bf8711036eb67b4e514aff545e847ca6"
+    },
+    {
+      "path": "recipe_sources/VLA/admission_r100/recipe.py",
+      "sha256": "a3ffd4e59ce4725d978a96a7a5e6115c073b4b0869e5f3b2de02ca4149ac3944"
+    },
+    {
+      "path": "recipe_sources/VLA/dita_transfer_r84/native.py",
+      "sha256": "a9dbca805955d9ee3d9c6a82e2e190bae945a547b3766a65dc2215469950de2c"
+    },
+    {
+      "path": "recipe_sources/VLA/replacement_r84/native.py",
+      "sha256": "4efee1df3e2d735dd265004322a650772a76dc15352c1ebbe5ee26334f1085be"
+    },
+    {
+      "path": "recipe_sources/VLA/admission_r100/seer_native.py",
+      "sha256": "f9ccc6c5ee64f87399ea0502b4009fbb3acfcac340e85161784a035333fdec34"
+    },
+    {
+      "path": "recipe_sources/VLA/falcon_esm_r91/native.py",
+      "sha256": "340f94740b323f4bd0f9b8842ea2e5df2a140a6bf15b285d5a97c10e7d4d0b5d"
+    },
+    {
+      "path": "recipe_sources/VLA/admission_r100/falcon_native.py",
+      "sha256": "e4d10a8759d22cf37bef5a596fcf5fd1d51503a3b5271988dc198336863fbe90"
+    },
+    {
+      "path": "recipe_sources/VLA/common/observation_profile.py",
+      "sha256": "5b3565d3b5ae305ff07defb7cdd13c994978e7e6177e6b2b97d79c9a97d7300d"
+    },
+    {
+      "path": "recipe_sources/VLA/common/body_gripper.py",
+      "sha256": "2f771690b5fe151bdae2de614c042e4c412d53df370e3b1427abf6c9f42a72c3"
+    },
+    {
+      "path": "recipe_sources/VLA/common/body_environment.py",
+      "sha256": "5868d450258b67db5104aeb7705873aaa8e1f68ba532617712b347bcbd051a5c"
+    },
+    {
+      "path": "recipe_sources/VLA/common/robotiq.py",
+      "sha256": "c87a8ba3d6c98fc50144009d9b0e6a718546c88ee61bb9988f6115703d95b4bf"
+    },
+    {
+      "path": "recipe_sources/VLA/common/environment.py",
+      "sha256": "31e90fd41b9cf48c83995c9f7a81632a9b8cd2c3dc2bd554b69c35f8a0f69e9c"
+    },
+    {
+      "path": "recipe_sources/VLA/common/physics_safety.py",
+      "sha256": "7fc5c6088169f4d790a535d8fe349f822ecbcf5faf1ec7d7f51c9738c9bcba83"
+    },
+    {
+      "path": "recipe_sources/VLA/common/action.py",
+      "sha256": "48328c19fbfb83defefb1c02b2e0a2b5527fa4f34094cf849d09eb9a1ba6b566"
+    },
+    {
+      "path": "recipe_sources/VLA/common/tasks.py",
+      "sha256": "8546e86efe580c7959ea4d121cc6e7a80933b00d20a2ceab34cd95cc9075adab"
+    },
+    {
+      "path": "recipe_sources/VLA/audits/replacement_r84_20261020/dita/ARTIFACT_ADMISSION.json",
+      "sha256": "4bccfb066e7ea709a8bbf577c0c42cade8f0e7e366ad56cb7ca1511c29595427"
+    },
+    {
+      "path": "recipe_sources/VLA/audits/native_admission_r100_20261025/seer/CHECKPOINT_TOPOLOGY.json",
+      "sha256": "e99cb4f834cfa0f0cdfb2b2882027d85aeebe217a1805b5257a8a16a5fbde08b"
+    }
+  ],
+  "implementation_notes": "Recipe sources retain historical feature-loader names and are references, NOT ready-made21-D CLI entry points. Port input construction using the new contract before training."
+}

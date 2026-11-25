@@ -1,0 +1,36 @@
+\begin{table}[!ht]
+\centering\footnotesize
+\caption{AdamW settings ($\beta_1=0.9$, $\epsilon=10^{-8}$).
+$B_\mu\times A$: per-step batch times gradient accumulation; LR: learning rate; WD: weight decay;
+clip: global gradient norm. Schedules count optimizer updates unless noted.}
+\label{tab:vla_optimizers}
+\begin{tabularx}{\linewidth}{@{}l c l c l c Y@{}}
+\toprule
+Method/stage & $B_\mu\times A$ & Peak LR & $\beta_2$ & WD & Clip & Warmup / schedule\\
+\midrule
+FLOWER main & $1\times16$ & $10^{-5}/2\!\times\!10^{-5}$ & .95 & .05 & 1 & 128; cosine to half peak at 4,096\\
+FLOWER rehearsal & $1\times16$ & $2\!\times\!10^{-6}/4\!\times\!10^{-6}$ & .95 & .05 & 1 & Constant; 128 updates, fresh optimizer\\
+X-VLA & $1\times4$ & $10^{-4}$ & .99 & 0 & 10 & 200; cosine to 0.1 peak; final horizon 14,500\\
+$\pi_0$ & $1\times4$ & $2.5\!\times\!10^{-5}$ & .95 & $10^{-10}$ & 1 & 100; cosine to $2.5\!\times\!10^{-6}$ at 3,000\\
+VLA-Adapter & $1\times4$ & $10^{-4}$ & .99 & 0 & 10 & 200; cosine to $10^{-5}$ at 6,000\\
+SmolVLA final & $2\times4$ & $2.5\!\times\!10^{-5}$ & .95 & $10^{-10}$ & 10 & 600; cosine over 10,000 microsteps to $6.25\!\times\!10^{-7}$\\
+VLA-JEPA & $1\times4$ & $10^{-4}$ & .95 & $10^{-10}$ & 10 & 100; cosine to $10^{-5}$ at 2,500\\
+Dita & $1\times32$ & $10^{-4}$ & .95 & .05 & 1 & 100; cosine over 10,000 to 0.01 peak; DINO LR $\times0.1$\\
+VLANeXt-S main/recovery & $1\times16$ & $10^{-4}$ & .999 & .1 & 1 & 1,000; cosine horizon 20,000, stopped at 9,216\\
+VLANeXt-S rehearsal & $1\times32$ & $2\!\times\!10^{-5}$ & .999 & .1 & 1 & 16; 512-update extension with $10^{-6}$ floor\\
+FALCON-ESM & $1\times16$ & $5\!\times\!10^{-5}$ & .999 & 0 & 1 & 64; cosine horizon 4,096 to 0.1 peak; selected at 2,048 adaptation updates\\
+Seer & $1\times16$ & $10^{-4}$ & .999 & $10^{-4}$ & 1 & 64; cosine horizon 4,096 to 0.1 peak\\
+\bottomrule
+\end{tabularx}
+\vspace{2pt}
+\begin{minipage}{\linewidth}\scriptsize
+FLOWER LR pairs denote VLM/non-VLM groups. Dita excludes biases/norms from WD.
+VLANeXt-S uses AdamW8bit. FALCON-ESM/Seer have two preceding qualification
+updates at batch 4, LR $10^{-4}$, WD $10^{-4}$.
+SmolVLA's stages use 10,000/5,000/5,000/2,500 updates at batches 32/32/16/8;
+the first-stage peak/end LR is $5\!\times\!10^{-5}/1.25\!\times\!10^{-6}$,
+then $2.5\!\times\!10^{-5}/6.25\!\times\!10^{-7}$.
+Its final 600/10,000 microsteps equal 150/2,500 optimizer updates.
+Earlier warmups are 1,000/250/250 updates.
+\end{minipage}
+\end{table}

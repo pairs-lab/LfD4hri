@@ -1,0 +1,38 @@
+\begin{table}[!ht]
+\centering\footnotesize
+\caption{VLA adaptation protocol. All stages use the same 21-D shared state.
+Batch is the final-stage effective batch; updates accumulate across stages.
+$H/K$: predicted/executed chunk length; commands run at 10\,Hz.}
+\label{tab:vla_adaptation}
+\begin{tabularx}{\linewidth}{@{}l c Y c r c c@{}}
+\toprule
+Method & Data & Trainable components & Batch & Updates & Output & $H/K$\\
+\midrule
+FLOWER~\cite{reuss2025flower} & $D_1$ & VLM LoRA ($r=8$), flow/action core, state projection & 16 & 4,224$^a$ & $\Delta7$ & $10/10$\\
+X-VLA~\cite{zheng2026xvla} & $D_2\!\to\!D_1$ & All-linear LoRA ($r=8$), soft prompts, action encoder/decoder & 4 & 14,500$^b$ & Abs20$\to\Delta7$ & $30/30$\\
+$\pi_0$~\cite{black2025pi0} & $D_1$ & Language/action LoRA ($r=16/32$), state/action/time projections & 4 & 3,000 & $\Delta7$ & $5/4$\\
+VLA-Adapter~\cite{wang2026vla} & $D_2$ & All-linear LoRA ($r=64$), action queries, $L_1$ head, proprio projector & 4 & 6,000 & $\Delta7$ & $8/8$\\
+SmolVLA~\cite{shukor2025smolvla} & $D_2$ & Language/connector, action expert and state/action projections; vision frozen; no LoRA & 8 & 22,500$^c$ & $\Delta7$ & $5/5$\\
+VLA-JEPA~\cite{sun2026vla} & $D_1$ & Action-only: DiT/action network and state encoder; Qwen frozen & 4 & 2,500 & $\Delta7$ & $7/7$\\
+Dita~\cite{hou2025dita} & $D_1$ & Full DINO/Q-Former/diffusion policy and sensor projection; CLIP text encoder frozen; no LoRA & 32 & 10,000$^d$ & $\Delta7$ & $10/1$\\
+VLANeXt-S~\cite{wu2026vlanext,wu2026vlanextfamily} & $D_1\!\to\!D_3$ & Full native policy: VLM, flow/action core and proprio projector; no LoRA & 32$^e$ & 9,728$^e$ & $\Delta7$ & $8/1$\\
+FALCON-ESM~\cite{zhang2026falcon} & $D_3$ & VLM LoRA ($r=8$), spatial injector, action/gripper heads and state projection; ESM frozen & 16 & 2,050$^f$ & $\Delta7$ & $10/1$\\
+Seer~\cite{tian2025seer} & $D_3$ & Native transformer, resampler, action/image-prediction heads and state projections; CLIP/MAE frozen; no LoRA & 16 & 4,098$^g$ & $\Delta7^h$ & $3/1$\\
+\bottomrule
+\end{tabularx}
+\vspace{2pt}
+\begin{minipage}{\linewidth}\scriptsize
+$D_1$: 2,185 trajectories /119,495 timesteps;
+$D_2$: 2,145 /117,736 ($D_1$ without 40 pose-recovery trajectories);
+$D_3$: 2,337 /125,527 ($D_1$ +152 near-miss corrections).
+All exclude 477 validation trajectories; synchronized camera streams share timestep counts.
+$^a$4,096 main +128 rehearsal; two preceding qualification updates excluded.
+$^b$7,000 on $D_2$ +7,500 on $D_1$.
+$^c$20,000 preceding-stage +2,500 final-stage updates; final batch 8.
+$^d$Checkpoint at 10,000 updates.
+$^e$8,192 on $D_1$ +1,024 recovery +512 rehearsal on $D_3$; initial batch 16, final batch 32.
+$^f$2 qualification +2,048 adaptation.
+$^g$2 qualification +4,096 adaptation.
+$^h$Seer uses previous-requested-pose-anchored local increments, converted to $\Delta7$.
+\end{minipage}
+\end{table}

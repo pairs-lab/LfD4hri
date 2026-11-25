@@ -1,0 +1,40 @@
+diff --git a/scripts/vision_tokenizers/qformer.py b/scripts/vision_tokenizers/qformer.py
+index 202796a..ddb41f6 100644
+--- a/scripts/vision_tokenizers/qformer.py
++++ b/scripts/vision_tokenizers/qformer.py
+@@ -20,7 +20,8 @@ try:
+ except:
+     XFORMERS_IS_AVAILBLE = False
+     print("xformers disabled")
+-    raise Exception("xformers disabled, not support")
++    # The original Attention/CrossAttention classes below already implement the
++    # explicit PyTorch attention fallback. Permit that path on this machine.
+ 
+ import einops
+ import numpy as np
+@@ -185,7 +186,9 @@ class CrossAttention(nn.Module):
+             x = einops.rearrange(x, "B L H D -> B L (H D)", H=self.num_heads)
+             attn = None
+         else:
+-            q = einops.rearrange(q, "B L (H D) -> B L H D", H=self.num_heads)
++            # R84: native fallback must use head-first layout like k/v. The
++            # original B,L,H,D query cannot multiply B,H,D,K keys (32 vs12).
++            q = einops.rearrange(q, "B L (H D) -> B H L D", H=self.num_heads)
+             kv = einops.rearrange(kv, "B L (K H D) -> K B H L D", K=2, H=self.num_heads)
+             k, v = kv.unbind(0)  # B H L D  # make torchscript happy (cannot use tensor as tuple)
+             q, k = _qk_norm(q, k, dtype=v.dtype)
+diff --git a/scripts/vision_tokenizers/vit_tokenizer.py b/scripts/vision_tokenizers/vit_tokenizer.py
+index 8372730..05bf777 100644
+--- a/scripts/vision_tokenizers/vit_tokenizer.py
++++ b/scripts/vision_tokenizers/vit_tokenizer.py
+@@ -11,7 +11,9 @@ from timm.models.vision_transformer import (
+     checkpoint_seq,
+     resample_abs_pos_embed,
+ )
+-from vision_tokenizers.clip import clip_vit_hf
++# The selected DINOv2 tokenizer never calls clip_vit_hf. Its unused import pulls
++# an obsolete Llama rotary helper from xattn.py, breaking Transformers4.46.3.
++# Keep the real DINOv2/QFormer path intact (R84 compatibility-only patch).
+ from vision_tokenizers.qformer import QFormer, qformer_base_hf
+ from vision_tokenizers.token_learner import TokenLearnerModule
+ from transformers import CLIPModel, CLIPProcessor

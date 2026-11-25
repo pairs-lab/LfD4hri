@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "robot": "ur5e",
+  "name": "wrist_v7_h65_f80_workspace_front",
+  "wrist_frame": "tool_link",
+  "front_camera_role": "policy_workspace",
+  "home_joints": [1.331346979659507, -1.2972310095377, 0.7466003004952745, -1.0201642958438712, 4.712388644537661, -0.23944941615516127],
+  "cameras": {
+    "front": {
+      "eye_world": [-0.65, -1.30, 0.75],
+      "target_world": [-0.02, -0.46, 0.10],
+      "up_world": [0.0, 0.0, 1.0],
+      "fov_degrees": 42.0
+    },
+    "wrist": {
+      "eye_in_tool": [0.0, 0.065, 0.045],
+      "target_in_tool": [0.0, 0.065, 0.395],
+      "up_axis_in_tool": [0.0, 1.0, 0.0],
+      "fov_degrees": 80.0
+    },
+    "overview": {
+      "eye_world": [-0.65, -1.8, 1.05],
+      "target_world": [-0.02, -0.46, 0.30],
+      "up_world": [0.0, 0.0, 1.0],
+      "fov_degrees": 42.0
+    }
+  },
+  "requested_eye_height_m": 0.65,
+  "ik_position_residual_m": 6.805060461635015e-08
+}
