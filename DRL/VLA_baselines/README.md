@@ -8,8 +8,6 @@ revisions and entry-point locations are in [MODELS.json](MODELS.json) and
 [UPSTREAMS.json](UPSTREAMS.json).
 
 - `VLA/`: original Python namespace, shared environment, model adapters and recipes.
-- `protocol21/`: locked 21-D input contract/configuration; **not yet integrated into
-  every runner**. Historical runners still contain their original state inputs.
 - `tools/`: source verification, optional asset linking and upstream restoration.
 
 **Not included:** weights, datasets, experiment outputs, videos, caches or virtual
