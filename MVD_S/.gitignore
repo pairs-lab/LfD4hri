@@ -1,0 +1,13 @@
+__pycache__/
+.venv/
+checkpoints/
+runs/
+outputs/
+third_party/
+*.pth
+*.pt
+*.safetensors
+*.mp4
+*.webm
+*.avi
+*.partial

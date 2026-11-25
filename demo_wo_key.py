@@ -55,6 +55,8 @@ def parse_args():
   Parse input arguments
   """
   parser = argparse.ArgumentParser(description='Action recognition and hand object detection')
+  from MVD_S.integration import add_action_arguments
+  add_action_arguments(parser)
   parser.add_argument('--video', default=' mmaction2/demo'
                                          '/practical_video/picking_reg_cube.mp4', help='video file/url')
   parser.add_argument('--reduced_frame_video', default=f'{ROOT_PATH}/reduced_frame_video/reduced_frame_video.mp4', help='reduced frame video')
@@ -151,11 +153,10 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 # START RUNNING
 
 def main(args):
-    video_dir = "Dataset/Dataset"
-    video_list = sorted(
-       [f for f in os.listdir(video_dir) if f.endswith(".MOV") or f.endswith(".mp4")],
-       key=lambda x: int(x.split(".")[0].split("_")[1])
-   )
+    from MVD_S.integration import prepare_demo_outputs
+    prepare_demo_outputs(args)
+    from MVD_S.integration import demo_inputs
+    video_dir, video_list = demo_inputs(args)
     # video_list = ["IMG_2577.MOV","IMG_2589.MOV"]
     # for i in range(len(video_list)):
     #     folder_path = os.path.join("Dataset/Best", str(i + 1))

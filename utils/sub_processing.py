@@ -4,7 +4,6 @@ from __future__ import print_function
 import numpy as np
 import cv2
 import torch
-from mmaction2.mmaction.apis import inference_recognizer, init_recognizer
 from moviepy.editor import VideoFileClip
 from lib.model.utils.config import cfg, cfg_from_file, cfg_from_list, get_output_dir
 from lib.model.utils.blob import im_list_to_blob
@@ -148,16 +147,9 @@ def load_faster_rcnn_model(args, pascal_classes):
     return model
 
 def action_recognition(args):
-    model = init_recognizer(args.config, args.action_checkpoint, device=args.device)  # device can be 'cuda:0'
-    # test a single image
-    result = inference_recognizer(model, args.reduced_frame_video)
-
-    predict_value = torch.argmax(result.pred_score, dim=0).item()
-    truth_label = load_label_map(args.label_map)
-    print(predict_value)
-    action = list(truth_label.values())[predict_value]
-    print('\n', action)
-    return action
+    # Default remains TSM; MVD-S is an explicit, separately implemented backend.
+    from MVD_S.integration import action_recognition as recognize
+    return recognize(args)
 
 def crop_image(image, bbox, expand_ratio):
     """

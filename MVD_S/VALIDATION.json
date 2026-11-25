@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-25",
+  "device_tested": "CPU",
+  "cuda_available_during_test": false,
+  "native_model_parameters": 21946926,
+  "native_forward_shape": [1, 174],
+  "unit_tests_passed": 18,
+  "actual_synthetic_video_optimizer_updates": 1,
+  "saved_classifier_weights_changed": true,
+  "strict_checkpoint_reload_passed": true,
+  "native_six_view_inference_passed": true,
+  "software_smoke_action_claim_suppressed": true,
+  "tsm_dispatch_regression": "mocked API test: original config/checkpoint/video and class-index mapping preserved",
+  "real_tsm_checkpoint_inference_tested": false,
+  "full_detector_keyframe_llava_pipeline_executed": false,
+  "recognition_accuracy_measured": false,
+  "paper_checkpoint_training_started": false,
+  "limitations": [
+    "No trained SSV2 classifier was supplied; inference quality was not assessed",
+    "Full video-understanding integration requires the original detector/LLaVA models and dependencies",
+    "Practical supervised fine-tuning recipe is deliberately distinguished from exact published MVD training"
+  ]
+}

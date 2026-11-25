@@ -1,0 +1,31 @@
+{
+  "repository": "https://github.com/ruiwang2021/mvd",
+  "commit": "45b877a6d18202a81528eeb31ff2da2c0e9ef2ea",
+  "paper": "https://openaccess.thecvf.com/content/CVPR2023/html/Wang_Masked_Video_Distillation_Rethinking_Masked_Feature_Modeling_for_Self-Supervised_Video_CVPR_2023_paper.html",
+  "license": "CC-BY-NC-4.0 (vendor/LICENSE); inherited notices in vendor/NOTICE.md",
+  "variant": "vit_small_patch16_224, 16 frames, tubelet2, 384-wide, 12 blocks, 6 heads, mean pooling, no CLS token, 174 classes",
+  "original_sha256": {
+    "modeling_finetune.py": "04d875420bef77bfd42adeee3ad12304d0fc7636b56751c299c8ddbc7b867121",
+    "functional.py": "6478a1698438598ef26d4ed5a113a03dc02225da5c5e155785e0d7e07b731d5d",
+    "volume_transforms.py": "107ebedcde61a1ec9913c5d56e82251586367b6abeb2a7f533cf7d52321549c8",
+    "LICENSE": "78f509afef1d9f122cef2640addce34c56b3e9d483feb1fc35fde9be7d4a78ea",
+    "NOTICE.md": "da2eaa7dadd3a11215b017379acfafc6cc3e8803c1f86bc45e476a7d3321d79f"
+  },
+  "vendored_sha256": {
+    "modeling_finetune.py": "70501420349b0d0f0661ecc63e05dc37d673b5b7063dde151cd624b58d4a85ec",
+    "functional.py": "6478a1698438598ef26d4ed5a113a03dc02225da5c5e155785e0d7e07b731d5d",
+    "volume_transforms.py": "107ebedcde61a1ec9913c5d56e82251586367b6abeb2a7f533cf7d52321549c8",
+    "LICENSE": "78f509afef1d9f122cef2640addce34c56b3e9d483feb1fc35fde9be7d4a78ea",
+    "NOTICE.md": "da2eaa7dadd3a11215b017379acfafc6cc3e8803c1f86bc45e476a7d3321d79f"
+  },
+  "vendor_changes": [
+    "Use timm.layers helper imports for tested timm1.0.28",
+    "Replace removed np.float alias with equivalent np.float64",
+    "Make register_model local/no-op to avoid overwriting timm image-ViT factories"
+  ],
+  "inference_recipe_sources": ["ssv2.py:SSVideoClsDataset test sampling/crops", "engine_for_finetuning.py:merge"],
+  "label_map_source": "mmaction2/label_map.txt, byte-identical 174-row task-string map",
+  "label_map_sha256": "40a5869bf9a0daa87c1be1dbfe88279093f3656c838275895272c1bb1b104a78",
+  "training_scope": "Practical single-device supervised adaptation; not a full reproduction of MVD pretraining/paper fine-tuning",
+  "trained_paper_checkpoint_included": false
+}
