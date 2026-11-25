@@ -1,6 +1,6 @@
-# Learning to Manipulate by Watching Humans: A Decoupled Vision-Language-Driven Imitation Framework
+# Learning to Manipulate by Watching Humans: Decoupling Video-to-Task-Command Parsing from Reinforcement-Learned Skill Execution
 
-**Authors:** [Thanh Nguyen Canh](https://thanhnguyencanh.github.io/), Thanh Tuan Tran, Haolan Zhang, Ziyan Gao, [Xiem HoangVan](https://sites.google.com/site/xiemhoang/), [Nak Young Chong](https://www.jaist.ac.jp/robot/).
+**Authors:** [Thanh Nguyen Canh](https://thanhnguyencanh.github.io/), [Thanh Tuan Tran](https://pairs-lab.github.io/people/tuan-thanh-tran/), Haolan Zhang, Ziyan Gao, [Xiem HoangVan](https://sites.google.com/site/xiemhoang/), [Nak Young Chong](https://www.jaist.ac.jp/robot/).
 
 LfD4hri separates video understanding from robot skill execution: human video
 demonstrations are converted into task commands, which are executed by learned
