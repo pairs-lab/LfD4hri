@@ -123,7 +123,7 @@ If you use this work, please cite:
 
 ```bibtex
 @article{canh2026human,
-  title={Learning to Manipulate by Watching Humans: A Decoupled Vision-Language-Driven Imitation Framework},
+  title={Learning to Manipulate by Watching Humans: Decoupling Video-to-Task-Command Parsing from Reinforcement-Learned Skill Execution},
   author={Thanh Nguyen Canh and Thanh Tuan Tran and Haolan Zhang and Ziyan Gao and Xiem HoangVan and Nak Young Chong},
   journal={},
   year={2026}
