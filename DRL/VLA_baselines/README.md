@@ -5,10 +5,6 @@ code for **FLOWER, X-VLA, π₀, VLA-Adapter, SmolVLA, VLA-JEPA, Dita, VLANeXt-S
 FALCON-ESM and Seer**. Model links and upstream revisions are in
 [MODELS.json](MODELS.json) and [UPSTREAMS.json](UPSTREAMS.json).
 
-- `protocol21/`: robot state, model-specific inputs, data loading and execution.
-- `VLA/`: native model integrations, simulation and training components.
-- `tools/`: source verification, optional asset linking and upstream restoration.
-
 Run here with `PYTHONPATH=.` and each model's dependencies. Weights, datasets,
 videos and virtual environments are not included.
 
