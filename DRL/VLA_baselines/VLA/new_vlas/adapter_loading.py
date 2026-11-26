@@ -29,8 +29,8 @@ def install_amp_query_cast(model):
             'native_index_assignment_and_forward_preserved': True}
 
 
-def import_native():
-    root = Path(__file__).resolve().parents[1]/'third_party/vla_adapter'
+def import_native(root=None):
+    root = Path(root) if root is not None else Path(__file__).resolve().parents[1]/'third_party/vla_adapter'
     packages = ('prismatic', 'prismatic.models', 'prismatic.extern',
                 'prismatic.extern.hf', 'prismatic.training', 'prismatic.vla')
     for name in packages:

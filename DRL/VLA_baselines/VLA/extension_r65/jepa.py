@@ -1,4 +1,4 @@
-"""Native VLA-JEPA; explicit pretrained-state8→simulator67 adaptation.
+"""Native VLA-JEPA; explicit pretrained-state8 to robot21 adaptation.
 
 No changes to native DiT, flow loss, Qwen features or neural action decoder.
 The meta constructor avoids loading a redundant foundation checkpoint before
@@ -26,11 +26,11 @@ def config():
     c.use_relative_actions = False  # Labels already canonical EEF deltas.
     c.resize_images_to = (224,224)
     c.device = 'cuda'; c.dtype = torch.bfloat16
-    c.state_dim = 67; c.action_dim = 7
+    c.state_dim = 21; c.action_dim = 7
     c.n_obs_steps = 1; c.chunk_size = c.n_action_steps = 7
     c.input_features = {f'observation.images.{name}': PolicyFeature(type=FeatureType.VISUAL, shape=(3,384,384))
-                        for name in ('front', 'wrist', 'simGT')}
-    c.input_features['observation.state'] = PolicyFeature(type=FeatureType.STATE, shape=(67,))
+                        for name in ('front', 'wrist')}
+    c.input_features['observation.state'] = PolicyFeature(type=FeatureType.STATE, shape=(21,))
     c.output_features = {'action': PolicyFeature(type=FeatureType.ACTION, shape=(7,))}
     c.validate_features()
     return c
@@ -38,15 +38,16 @@ def config():
 
 def stats(data):
     from VLA.family_transfer_r54.data import action_stats
-    return {'state': data.stats['scene67'], 'action': action_stats(data)}
+    return {'state': data.stats['robot21'], 'action': action_stats(data)}
 
 
 def batch(x, stat, device='cuda', train=False):
     import torch
     result = {f'observation.images.{k}': torch.from_numpy(x[src].copy()).permute(2,0,1)[None].to(device).float()/255
-              for k,src in (('front','front'), ('wrist','wrist'), ('simGT','map'))}
-    state = (x['numeric67'] - np.asarray(stat['state']['mean'],np.float32)) / np.asarray(stat['state']['std'],np.float32)
-    result['observation.state'] = torch.from_numpy(np.clip(state,-5.,5.).copy())[None].to(device)
+              for k,src in (('front','front'), ('wrist','wrist'))}
+    from protocol21.state21_reference import normalize
+    state = normalize(x['raw_state21'],stat['state'])
+    result['observation.state'] = torch.from_numpy(state.copy())[None].to(device)
     result['task'] = [x['instruction']]
     if train:
         action = (x['action'] - np.asarray(stat['action']['mean'],np.float32))/np.asarray(stat['action']['std'],np.float32)
@@ -96,8 +97,9 @@ class Runtime:
                     reset.append(key); continue
                 values[key] = saved.get_tensor(key)
         if reset != ['model.action_model.state_encoder.layer1.weight']:
-            raise ValueError('Require explicit state8→67 projection migration')
-        layer = torch.nn.Linear(67, self.cfg.action_hidden_size, dtype=torch.float32)
+            raise ValueError('Require explicit state8 to robot21 projection migration')
+        layer = torch.nn.Linear(21, self.cfg.action_hidden_size, dtype=torch.float32)
+        torch.nn.init.zeros_(layer.weight)
         values[reset[0]] = layer.weight.detach()
         missing, extra = self.model.load_state_dict(values, strict=False, assign=True)
         if missing or extra:
@@ -118,19 +120,19 @@ class Runtime:
         def checked_inputs(*args,**kwargs):
             prepared=native_inputs(*args,**kwargs)
             grid=prepared['image_grid_thw']
-            if grid.ndim!=2 or grid.shape[0]!=3:
-                raise ValueError('Native Qwen did not consume front/wrist/GT3')
+            if grid.ndim!=2 or grid.shape[0]!=2:
+                raise ValueError('Native Qwen did not consume front/wrist')
             self._seen_inputs['actual_Qwen_image_grid_thw']=grid.detach().cpu().tolist()
             return prepared
         self.model.model.qwen.build_inputs=checked_inputs
         def checked_state(_module,args):
             value=args[0]
-            if value.shape[-1]!=67 or self._expected_state is None:
-                raise ValueError('Native DiT omitted full privileged state67')
-            expected=self._expected_state.reshape(1,67).to(value.dtype)
-            if not torch.equal(value.reshape(-1,67),expected.expand(value.numel()//67,67)):
-                raise ValueError('Actual native DiT privileged values differ')
-            self._seen_inputs['actual_DiT_state_dimensions']=67
+            if value.shape[-1]!=21 or self._expected_state is None:
+                raise ValueError('Native DiT omitted robot21')
+            expected=self._expected_state.reshape(1,21).to(value.dtype)
+            if not torch.equal(value.reshape(-1,21),expected.expand(value.numel()//21,21)):
+                raise ValueError('Actual native DiT robot values differ')
+            self._seen_inputs['actual_DiT_state_dimensions']=21
         self.model.model.action_model.state_encoder.register_forward_pre_hook(checked_state)
         self.load_receipt = {'all_retained_pretrained_tensors_loaded': True,
             'reinitialized': reset, 'world_auxiliary_tensors_omitted': len(skipped),
@@ -160,7 +162,7 @@ class Runtime:
 
     def _finish_inputs(self):
         if (not self._seen_inputs.get('actual_Qwen_image_grid_thw') or
-            self._seen_inputs.get('actual_DiT_state_dimensions')!=67):
+            self._seen_inputs.get('actual_DiT_state_dimensions')!=21):
             raise ValueError('Actual native VLA privileged-input receipt incomplete')
         self.last_input_receipt=dict(self._seen_inputs)
 

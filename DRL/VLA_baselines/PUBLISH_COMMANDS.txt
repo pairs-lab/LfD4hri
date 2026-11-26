@@ -1,0 +1,10 @@
+# Run manually from the repo root. No broad git add or deletion is needed.
+cd /work/LfD4hri
+git status --short -- DRL/VLA_baselines
+git add -A -- DRL/VLA_baselines
+git diff --cached --stat
+git commit -m "Add robot21 baseline adapters and checks" -- DRL/VLA_baselines
+git push origin main
+
+# -A stages replacements/deletions inside this folder only. It does not remove
+# original DRL/VLA or add external weights, datasets, environments or asset symlinks.

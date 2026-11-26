@@ -1,6 +1,6 @@
 """DINOv2 -> text-FiLM QFormer -> native continuous-action diffusion Transformer.
 
-Extensions: shared encoder on3 views, one causal sensor74 token in context.
+Extensions: shared encoder on two views, one native7+robot21 token in context.
 No new small predictor replaces the native pretrained denoising Transformer.
 """
 from functools import lru_cache
@@ -33,7 +33,8 @@ class Runtime:
                 scheduler_type=0,num_inference_steps=10,attn_implementation='eager',
                 use_action_head_diff=False,input_size='(224,224)')
         finally:vit_tokenizer.create_model=create
-        artifact=read(OUT/'ARTIFACT_ADMISSION.json')
+        from pathlib import Path
+        artifact=read(Path(__file__).resolve().parents[2]/'protocol21/foundations.json')['dita']
         from VLA.common.provenance import sha256_file
         if sha256_file(BASE)!=artifact['sha256']:
             raise ValueError('Official robot checkpoint bytes changed')
@@ -43,8 +44,8 @@ class Runtime:
         if missing or unexpected:
             raise ValueError('Native Dita key mismatch: '+str({'missing':sorted(missing),'unexpected':sorted(unexpected)}))
         network.load_state_dict(weights,strict=True)
-        self.model=nn.ModuleDict({'native':network,'sensor74':nn.Linear(74,768)})
-        nn.init.zeros_(self.model['sensor74'].weight);nn.init.zeros_(self.model['sensor74'].bias)
+        self.model=nn.ModuleDict({'native':network,'sensor28':nn.Linear(28,768)})
+        nn.init.zeros_(self.model['sensor28'].weight);nn.init.zeros_(self.model['sensor28'].bias)
         if checkpoint:
             from safetensors.torch import load_model
             load_model(self.model,str(checkpoint),strict=True)
@@ -74,12 +75,12 @@ class Runtime:
         from torchvision.transforms import RandomResizedCrop
         language=self.language(s['instruction']).to(self.device)
         tensors=[]
-        for name in ('front','wrist','map'):
+        for name in ('front','wrist'):
             frames=[]
             # Two measured RGB timestamps: previous/current, reset repeats only.
             for rgb in s['history_images'][name]:
                 im=Image.fromarray(rgb).resize((224,224),Image.Resampling.BILINEAR)
-                if augment and name!='map':
+                if augment:
                     # Disclosed target-domain mild photometric augmentation; no
                     # unpaired random geometry between the two physical frames.
                     im=F.adjust_brightness(im,float(torch.empty(()).uniform_(.9,1.1)))
@@ -88,12 +89,13 @@ class Runtime:
             tensors.append(torch.stack(frames)[None].to(self.device))
         lang=language.expand(1,2,77,768)
         tokens=[self.model['native'].image_tokenizer(v,lang) for v in tensors]
-        numeric=torch.as_tensor(s['history74'][-2:][None],device=self.device)
-        sensors=self.model['sensor74'](numeric).unsqueeze(2)
+        numeric=torch.as_tensor(s['history28'][-2:][None],device=self.device)
+        if numeric.shape != (1,2,28):raise ValueError('Dita requires causal history2 x native7+robot21')
+        sensors=self.model['sensor28'](numeric).unsqueeze(2)
         context=torch.cat([*tokens,sensors],dim=2)
         obs={'image':tensors[0],'natural_language_embedding':lang}
-        self.last_input={'actual_views':3,'RGB_timestamps':2,'native_QFormer_tokens_per_view':32,
-            'context_shape':list(context.shape),'measured_sensor_shape':[1,2,74],
+        self.last_input={'actual_views':2,'RGB_timestamps':2,'native_QFormer_tokens_per_view':32,
+            'context_shape':list(context.shape),'measured_sensor_shape':[1,2,28],
             'unseen_future_or_expert_phase':False}
         return obs,context
 

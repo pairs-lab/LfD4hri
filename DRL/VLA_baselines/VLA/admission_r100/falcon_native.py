@@ -68,7 +68,7 @@ class Runtime(NativeRuntime):
             if 'lora_B' in name:
                 branch='vision_LoRA' if name.startswith('backbone.vision_model.') else (
                     'language_LoRA' if name.startswith('backbone.text_model.') else 'image_to_text_LoRA')
-            elif name=='state67.2.weight':branch='privileged67'
+            elif name=='robot21.2.weight':branch='robot21'
             elif name=='act_head.spatial_injector.proj1.0.weight':branch='native_ESM_spatial_injector'
             elif name=='act_head.actions.mlp.6.weight':branch='native_action_head'
             if branch:
@@ -78,7 +78,7 @@ class Runtime(NativeRuntime):
                         self.branch_gradients[key]=max(self.branch_gradients[key],float(grad.detach().abs().sum()))
                 param.register_hook(observe)
         if set(self._gradient_groups.values())!={'vision_LoRA','language_LoRA','image_to_text_LoRA',
-                'privileged67','native_ESM_spatial_injector','native_action_head'}:
+                'robot21','native_ESM_spatial_injector','native_action_head'}:
             raise ValueError('Expected actual native/privileged/vision/language gradient branches missing')
         if checkpoint:
             from .checkpoint_io import load_adaptation

@@ -1,22 +1,35 @@
 {
-  "date": "2026-11-25",
-  "scope": "Source export only; no model jobs or external uploads",
-  "copied_file_checksums_passed": 1322,
-  "python_files_syntax_checked": 1292,
+  "date": "2026-11-26",
+  "scope": "Robot21 input/data/execution adapters; bounded native forwards only, no training or uploads",
+  "current_source_hashes_checked": 1351,
+  "python_files_syntax_checked": 1313,
   "numerical_21D_contract_tests_passed": 8,
-  "additional_CPU_sampling_and_spatial_tests_passed": 6,
+  "robot21_integration_tests_passed": 33,
+  "PyBullet_smoke": {"tasks": 4, "observations_per_task": 4, "model_interfaces_per_task": 10},
   "upstream_source_revisions_recorded": 22,
   "local_upstream_patches_reverse_check_passed": 4,
   "shared_action_task_imports_use_exported_namespace": true,
   "weight_dataset_video_cache_payloads_found": 0,
   "credential_pattern_scan_findings": 0,
-  "native_model_inference_tested": false,
-  "all_native_runners_migrated_to_21D": false,
+  "native_model_inference_tested": true,
+  "native_forwards_on_measured_PyBullet_observations": {
+    "flower": {"device": "cpu", "prediction_shape": [10, 7], "finite": true},
+    "xvla": {"device": "cuda", "prediction_shape": [30, 20], "finite": true},
+    "smolvla": {"device": "cuda", "prediction_shape": [5, 7], "finite": true}
+  },
+  "native_forward_smoke_only_not_task_success_or_training": true,
+  "smolvla_smoke_foundation_cache_revision": "d9f33c94a60fb382c90dea2164c96845bd955e28",
+  "current_entry_point": "protocol21/run.py",
+  "all_ten_input_interfaces_implemented": true,
+  "all_ten_native_forward_tests_completed": false,
+  "native_forward_not_tested_missing_foundations": ["pi0", "vla_adapter", "vla_jepa", "dita", "vlanext_s", "falcon_esm", "seer"],
+  "optimizer_steps_executed": 0,
+  "all_ten_training_loss_forwards_verified": false,
   "original_source_tree_modified": false,
   "notable_omissions": [
     "Upstream repos: restore selected pinned sources, then install per-model dependencies",
     "Main DRL asset tree: supply separately or use explicit link_assets helper",
-    "Model weights, demonstration payloads and historical artifact receipts",
+    "Model weights and aligned robot21 demonstration payloads",
     "Storage-maintenance scripts; one legacy FALCON test imports their cleanup policy"
   ]
 }

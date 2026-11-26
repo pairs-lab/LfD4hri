@@ -1,4 +1,4 @@
-"""Native FALCON architecture, isolated loader and explicit state67 adaptation.
+"""Native FALCON architecture, isolated loader and explicit robot21 adaptation.
 
 No writes to transformers, no native CLI/sudo/tokenizer fallback, no Oracle.
 The full native Kosmos/ESM/action architecture is instantiated, not a small head
@@ -131,15 +131,15 @@ class Runtime:
         self.model.to(device=device, dtype=torch.bfloat16 if device=='cuda' else torch.float32)
         del state, raw, expected
         self.model.requires_grad_(False)
-        self.model.state67 = torch.nn.Sequential(torch.nn.Linear(67,1024), torch.nn.SiLU(),
+        self.model.robot21 = torch.nn.Sequential(torch.nn.Linear(21,1024), torch.nn.SiLU(),
             torch.nn.Linear(1024,self.model.hidden_size)).to(device=device, dtype=torch.float32)
         # Stable initialization of extra causal input, not an action residual.
-        torch.nn.init.zeros_(self.model.state67[-1].weight)
-        torch.nn.init.zeros_(self.model.state67[-1].bias)
+        torch.nn.init.zeros_(self.model.robot21[-1].weight)
+        torch.nn.init.zeros_(self.model.robot21[-1].bias)
         self._state = None
         def causal_condition(module, args):
-            if self._state is None: raise ValueError('Missing current causal state67')
-            feature = module.state67(self._state) if hasattr(module,'state67') else self.model.state67(self._state)
+            if self._state is None: raise ValueError('Missing current robot21')
+            feature = self.model.robot21(self._state)
             return (args[0]+feature.to(args[0].dtype)[:,None,None,:], *args[1:])
         self.model.act_head.register_forward_pre_hook(causal_condition)
         self.model.backbone.config.use_cache = False
@@ -157,7 +157,7 @@ class Runtime:
     def stage(self, name):
         import torch
         self.model.requires_grad_(False)
-        self.model.state67.requires_grad_(True)
+        self.model.robot21.requires_grad_(True)
         self.model.act_head.spatial_injector.requires_grad_(True)
         if name in ('native_embodiment', 'joint_refinement'):
             # Target-domain native output calibration precedes spatial-only
@@ -201,11 +201,11 @@ class Runtime:
         if image.max()>1: image = image/255.
         mask = torch.isfinite(depth[...,0]) & (depth[...,0]>.01) & (depth[...,0]<3.)
         depth = torch.where(mask[...,None],depth,torch.zeros_like(depth))
-        mean, std = [np.asarray(self.stats['scene67'][k],np.float32) for k in ('mean','std')]
-        self._state = torch.as_tensor(np.clip((s['numeric67']-mean)/std,-5,5)[None],
+        from protocol21.state21_reference import normalize
+        self._state = torch.as_tensor(normalize(s['raw_state21'],self.stats['robot21'])[None],
             device=self.device,dtype=torch.float32)
         self.last_input = {'actual_RGB_views':2,'native_ESM':True,'actual_depth':True,
-            'numeric67':True,'instruction_tokens':int(tokens['input_ids'].shape[1]),
+            'robot21':True,'instruction_tokens':int(tokens['input_ids'].shape[1]),
             'teacher_phase_future_labels_or_geometric_actions':False}
         return dict(vision_x=rgb(s['front']), vision_gripper=rgb(s['wrist']),
             lang_x=tokens['input_ids'].to(self.device), attention_mask=tokens['attention_mask'].bool().to(self.device),

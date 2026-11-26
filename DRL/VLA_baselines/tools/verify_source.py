@@ -21,7 +21,7 @@ def main():
     for row in manifest['files']:
         path = ROOT / row['path']
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
-            errors.append('Copied source missing/modified: ' + row['path'])
+            errors.append('Current package source missing/modified: ' + row['path'])
     checked = 0
     for path in ROOT.rglob('*'):
         relative = path.relative_to(ROOT)
@@ -64,6 +64,11 @@ def main():
     print(tests.stdout + tests.stderr)
     if tests.returncode:
         errors.append('21-D numerical contract tests failed; install numpy first')
+    integration = subprocess.run([sys.executable,'-B','-m','unittest','discover','-s','protocol21/tests','-v'],
+                                 cwd=ROOT,capture_output=True,text=True)
+    print(integration.stdout+integration.stderr)
+    if integration.returncode:
+        errors.append('Robot21 integration tests failed; install base test dependencies')
     result = {'source_hashes': len(manifest['files']), 'python_syntax_files': checked,
               'upstream_repositories': len(upstreams), 'errors': errors,
               'native_model_inference_tested': False, 'training_started': False}

@@ -28,7 +28,7 @@ def pack(*, q, closure01, pad_midpoint_world, previous_signed_close,
     if not (0 <= closure01 <= 1 and -1 <= previous_signed_close <= 1):
         raise ValueError('Invalid closure/previous-command convention')
     forces = np.asarray([left_external_normal_force_N, right_external_normal_force_N], np.float64)
-    if not np.isfinite(forces).all() or np.any(forces < 0) or surface_jaw_gap_m < 0:
+    if not np.isfinite(forces).all() or np.any(forces < 0) or not np.isfinite(surface_jaw_gap_m) or surface_jaw_gap_m < 0:
         raise ValueError('Invalid contact force/aperture')
     result = np.r_[q, closure01, p, previous_signed_close, R[:, :2].T.ravel(),
                    surface_jaw_gap_m, (forces > .1).astype(np.float64), forces.sum()]
@@ -54,12 +54,14 @@ def fit_train_stats(raw_train):
 def normalize(raw, stats):
     x = np.asarray(raw, np.float32)
     mean, std = (np.asarray(stats[k], np.float32) for k in ('mean', 'std'))
-    if x.shape[-1] != 21 or mean.shape != (21,) or std.shape != (21,):
+    if x.ndim < 1 or x.shape[-1] != 21 or mean.shape != (21,) or std.shape != (21,):
         raise ValueError('Do not reuse old-width normalizers')
     if not np.isfinite(x).all() or not np.isfinite(np.r_[mean, std]).all() or np.any(std <= 0):
         raise ValueError('Invalid finite normalization record')
     if not np.isin(x[..., BINARY], (0, 1)).all():
         raise ValueError('Contact channels must remain binary')
+    if not np.array_equal(mean[list(BINARY)], [0, 0]) or not np.array_equal(std[list(BINARY)], [1, 1]):
+        raise ValueError('Normalizer must preserve the two contact bits exactly')
     return ((x - mean) / std).astype(np.float32)
 
 

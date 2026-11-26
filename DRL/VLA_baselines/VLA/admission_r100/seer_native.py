@@ -5,7 +5,6 @@ import sys
 import types
 import numpy as np
 from .common import ROOT,OUT,ASSETS,read
-from VLA.scene64_conditioning import encode_numeric
 
 REPO=ROOT/'VLA/third_party/seer'
 
@@ -22,11 +21,12 @@ class Runtime:
     horizon=3
     history=7
 
-    def __init__(self,stats,*,device='cuda',checkpoint=None):
+    def __init__(self,stats,*,device='cuda',checkpoint=None,foundation=None):
         import torch
         import clip
         cls=native_class();self.stats=stats;self.device=device
-        self.topology=read(OUT/'seer/CHECKPOINT_TOPOLOGY.json')['native_topology']
+        foundation_spec=read(Path(__file__).resolve().parents[2]/'protocol21/foundations.json')['seer']
+        self.topology=foundation_spec['native_topology']
         config={k:v for k,v in self.topology.items() if k not in ('transformer_heads_source',)}
         config.update(sequence_length=7,finetune_type='real',clip_device='cpu',phase='finetune',
             vit_checkpoint_path=str(ASSETS/'seer/mae_pretrain_vit_base.pth'))
@@ -37,7 +37,11 @@ class Runtime:
         clip.load=local_clip
         try:self.model=cls(**config)
         finally:clip.load=load_clip
-        value=torch.load(ASSETS/'seer/seer_droid.pth',map_location='cpu',mmap=True,weights_only=True)
+        from VLA.common.provenance import sha256_file
+        base_path=Path(foundation) if foundation is not None else ASSETS/'seer/seer_droid.pth'
+        if sha256_file(base_path)!=foundation_spec['sha256']:
+            raise ValueError('Seer foundation bytes changed')
+        value=torch.load(base_path,map_location='cpu',mmap=True,weights_only=True)
         state={k.removeprefix('module.'):v for k,v in value['model_state_dict'].items()}
         state['transformer_backbone_position_embedding']=state['transformer_backbone_position_embedding'][:,:7].clone()
         expected=self.model.state_dict()
@@ -56,8 +60,8 @@ class Runtime:
             'native_official_position_prefix_adaptation':[11,7]}
         del value,state,expected
         self.model.clip_model.requires_grad_(False);self.model.vision_encoder.requires_grad_(False)
-        self.model.privileged67=torch.nn.Sequential(torch.nn.Linear(67,384),torch.nn.SiLU(),torch.nn.Linear(384,384))
-        torch.nn.init.zeros_(self.model.privileged67[-1].weight);torch.nn.init.zeros_(self.model.privileged67[-1].bias)
+        self.model.robot21=torch.nn.Sequential(torch.nn.Linear(21,384),torch.nn.SiLU(),torch.nn.Linear(384,384))
+        torch.nn.init.zeros_(self.model.robot21[-1].weight);torch.nn.init.zeros_(self.model.robot21[-1].bias)
         self._privileged=None
         def add_measured_state(module,args,output):
             if self._privileged is None:raise ValueError('Current causal privileged state missing')
@@ -96,15 +100,14 @@ class Runtime:
             wrists=np.concatenate((s['wrist_history'],s['future_wrist_labels']))
         else:fronts,wrists=s['front_history'],s['wrist_history']
         front,wrist=self.images(fronts,wrists,augment=training)
-        mean,std=(np.asarray(self.stats['scene67'][k],np.float32) for k in ('mean','std'))
-        measured=np.stack([encode_numeric(raw) for raw in s['scene64_history']])
-        measured=np.clip((measured-mean)/std,-5,5)
-        self._privileged=self.model.privileged67(torch.as_tensor(measured,device=self.device,dtype=torch.float32))
+        measured=np.asarray(s['robot21_history'],np.float32)
+        if measured.shape!=(7,21):raise ValueError('Expected seven normalized causal robot21 observations')
+        self._privileged=self.model.robot21(torch.as_tensor(measured,device=self.device,dtype=torch.float32))
         if self._privileged.shape!=(7,384):raise ValueError('Exactly seven causal state tokens required')
         result={'image_primary':front[:7][None].to(self.device), 'image_wrist':wrist[:7][None].to(self.device),
             'state':torch.as_tensor(s['state_history'][None],device=self.device,dtype=torch.float32),
             'text_token':text[:,None].repeat(1,7,1).to(self.device)}
-        self.last_input={'views':2,'history':7,'native_state_dim':7,'learned_privileged_dim':67,
+        self.last_input={'views':2,'history':7,'native_state_dim':7,'robot_state_dim':21,
             'text_tokens':int((text!=0).sum()),'future_images_in_model_input':False,
             'native_horizon':3,'history_reset_is_repeat_initial_observation':True}
         return result,(front[7:],wrist[7:]) if training else None

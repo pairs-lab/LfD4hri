@@ -1,6 +1,6 @@
 {
   "created_utc": "2026-11-25T09:38:54.667621+00:00",
-  "source_scope": "DRL/VLA plus source-only DRL support modules; originals unchanged",
+  "source_scope": "VLA_baselines source and robot21 adapters; original DRL/VLA is unchanged",
   "excluded": [
     ".git",
     ".venv",
@@ -29,6 +29,36 @@
     "venv"
   ],
   "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "0746980803741147073d4eb49211293371b27db34b033a97f02a2e01cf8a3003",
+      "bytes": 580
+    },
+    {
+      "path": "MODELS.json",
+      "sha256": "14fe1f90c07c1b3d104996ed73a0836c2beb28fa1669d93914be28047ad6a731",
+      "bytes": 1900
+    },
+    {
+      "path": "PUBLISH_COMMANDS.txt",
+      "sha256": "6dc2bc58c7c65353108076a9c90bc54bc549f908115a9f307ffbeb9f71456acf",
+      "bytes": 454
+    },
+    {
+      "path": "README.md",
+      "sha256": "7cfa58757b15fac32a44f1cdb55a8ca26fd3a0bebbeeac490a28b7f8a2ca51f8",
+      "bytes": 1158
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "76c0a62c10776d8023c151ad85070af8b4c79f3c8fa17aa389cb199bdeee5c2d",
+      "bytes": 1165
+    },
+    {
+      "path": "UPSTREAMS.json",
+      "sha256": "199637b4e0c213da919417b818e10750f534d7fa87010a1859b42af312e3ae66",
+      "bytes": 6131
+    },
     {
       "path": "VLA/__init__.py",
       "source": "VLA/__init__.py",
@@ -116,8 +146,9 @@
     {
       "path": "VLA/admission_r100/falcon_native.py",
       "source": "VLA/admission_r100/falcon_native.py",
-      "bytes": 6432,
-      "sha256": "e4d10a8759d22cf37bef5a596fcf5fd1d51503a3b5271988dc198336863fbe90"
+      "bytes": 6422,
+      "sha256": "1fa90e68baf9bbf35a54a472cc91be4d8c48b8621d00f52a6383aa47e89564f8",
+      "original_export_sha256": "e4d10a8759d22cf37bef5a596fcf5fd1d51503a3b5271988dc198336863fbe90"
     },
     {
       "path": "VLA/admission_r100/groot_audit.py",
@@ -194,8 +225,9 @@
     {
       "path": "VLA/admission_r100/seer_native.py",
       "source": "VLA/admission_r100/seer_native.py",
-      "bytes": 8881,
-      "sha256": "f9ccc6c5ee64f87399ea0502b4009fbb3acfcac340e85161784a035333fdec34"
+      "bytes": 9096,
+      "sha256": "f843f841b5dce896dafdaa13c75598911307b2b033272998494b861c008ddf73",
+      "original_export_sha256": "f9ccc6c5ee64f87399ea0502b4009fbb3acfcac340e85161784a035333fdec34"
     },
     {
       "path": "VLA/admission_r100/server.py",
@@ -282,12 +314,6 @@
       "sha256": "44d6c2dfb004ec2be59e2a658403f30ac231f3a303a1023f5c98104c568dbb91"
     },
     {
-      "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-base.mtl",
-      "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-base.mtl",
-      "bytes": 280,
-      "sha256": "b3a0877bfbfe9688f766e6e8850acddd6ac02906b787a5595a9e809cdb82bb63"
-    },
-    {
       "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-base.obj",
       "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-base.obj",
       "bytes": 3025788,
@@ -298,12 +324,6 @@
       "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-base.stl",
       "bytes": 1712484,
       "sha256": "1c7b9f2bd92d705fc4e897c94e905973a3c05f406845e942229433deb7041453"
-    },
-    {
-      "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-coupler.mtl",
-      "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-coupler.mtl",
-      "bytes": 280,
-      "sha256": "b3a0877bfbfe9688f766e6e8850acddd6ac02906b787a5595a9e809cdb82bb63"
     },
     {
       "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-coupler.obj",
@@ -318,12 +338,6 @@
       "sha256": "d5ee95e62f8415bf5b6e503c831a958f5fc1990bf9b2865329ec38a28932727c"
     },
     {
-      "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-driver.mtl",
-      "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-driver.mtl",
-      "bytes": 280,
-      "sha256": "b3a0877bfbfe9688f766e6e8850acddd6ac02906b787a5595a9e809cdb82bb63"
-    },
-    {
       "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-driver.obj",
       "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-driver.obj",
       "bytes": 106449,
@@ -334,12 +348,6 @@
       "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-driver.stl",
       "bytes": 67084,
       "sha256": "bbd6e868b1778bead60d2516c7ede581d7ad4e431744b1828757d6ea5129c112"
-    },
-    {
-      "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-follower.mtl",
-      "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-follower.mtl",
-      "bytes": 280,
-      "sha256": "b3a0877bfbfe9688f766e6e8850acddd6ac02906b787a5595a9e809cdb82bb63"
     },
     {
       "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-follower.obj",
@@ -358,12 +366,6 @@
       "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-pad.stl",
       "bytes": 684,
       "sha256": "6c4e73a07a7d6853777450d0019691d2d43f50c9fa0bd6b0189d4af164a0ce4b"
-    },
-    {
-      "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-spring_link.mtl",
-      "source": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-spring_link.mtl",
-      "bytes": 280,
-      "sha256": "b3a0877bfbfe9688f766e6e8850acddd6ac02906b787a5595a9e809cdb82bb63"
     },
     {
       "path": "VLA/assets/body_grasp_v9/robotiq_2f_85/robotiq-2f-spring_link.obj",
@@ -2102,8 +2104,9 @@
     {
       "path": "VLA/dita_transfer_r84/native.py",
       "source": "VLA/dita_transfer_r84/native.py",
-      "bytes": 7661,
-      "sha256": "a9dbca805955d9ee3d9c6a82e2e190bae945a547b3766a65dc2215469950de2c"
+      "bytes": 7824,
+      "sha256": "48afd0563ba778324c2b3a8dc1dd72a3653434c7d91f61176c73c6c783893fde",
+      "original_export_sha256": "a9dbca805955d9ee3d9c6a82e2e190bae945a547b3766a65dc2215469950de2c"
     },
     {
       "path": "VLA/dita_transfer_r84/owner.py",
@@ -2456,8 +2459,9 @@
     {
       "path": "VLA/extension_r65/jepa.py",
       "source": "VLA/extension_r65/jepa.py",
-      "bytes": 9752,
-      "sha256": "94fae980045683933875e35beda4809a73d838299a42de3c61748ec0a67395dc"
+      "bytes": 9718,
+      "sha256": "1d12a355f93930babe569266e487ee62aeb582182aafdf1fc4ed631080d92bbe",
+      "original_export_sha256": "94fae980045683933875e35beda4809a73d838299a42de3c61748ec0a67395dc"
     },
     {
       "path": "VLA/extension_r65/results.py",
@@ -2522,8 +2526,9 @@
     {
       "path": "VLA/falcon_esm_r91/common.py",
       "source": "VLA/falcon_esm_r91/common.py",
-      "bytes": 1108,
-      "sha256": "a15173821de80023367c9a67ead2a142dcf75863f024dc9d8f388a551658fee2"
+      "bytes": 1118,
+      "sha256": "b5c53cce11a92dd4dc0f76a35c4e3fcd4d67b6908c01d8b7318001ed63ed9d8c",
+      "original_export_sha256": "a15173821de80023367c9a67ead2a142dcf75863f024dc9d8f388a551658fee2"
     },
     {
       "path": "VLA/falcon_esm_r91/data.py",
@@ -2540,8 +2545,9 @@
     {
       "path": "VLA/falcon_esm_r91/native.py",
       "source": "VLA/falcon_esm_r91/native.py",
-      "bytes": 13541,
-      "sha256": "340f94740b323f4bd0f9b8842ea2e5df2a140a6bf15b285d5a97c10e7d4d0b5d"
+      "bytes": 13445,
+      "sha256": "f9ad34b424b27975a2bf78af31e1aff77f1d8d4090efd413364bcd7252d403a1",
+      "original_export_sha256": "340f94740b323f4bd0f9b8842ea2e5df2a140a6bf15b285d5a97c10e7d4d0b5d"
     },
     {
       "path": "VLA/falcon_esm_r91/tests.py",
@@ -2654,8 +2660,9 @@
     {
       "path": "VLA/family_transfer_r54/pi0.py",
       "source": "VLA/family_transfer_r54/pi0.py",
-      "bytes": 3624,
-      "sha256": "aa08fb901e16cdb791c39d53b0c70dda775ebd2928ac5307260704881b5511eb"
+      "bytes": 1831,
+      "sha256": "c57bb3c2a81b12c75479d53ff0a00f2e96c92fcc59dd7d3ad3147b4384220f82",
+      "original_export_sha256": "aa08fb901e16cdb791c39d53b0c70dda775ebd2928ac5307260704881b5511eb"
     },
     {
       "path": "VLA/family_transfer_r54/reload_pi0.py",
@@ -2690,8 +2697,9 @@
     {
       "path": "VLA/family_transfer_r54/smol.py",
       "source": "VLA/family_transfer_r54/smol.py",
-      "bytes": 6078,
-      "sha256": "d1f0978ddf4a8b41f5a8485de06f3cada5096290a7012eec608eefb768282665"
+      "bytes": 3107,
+      "sha256": "134d96e653651a518ad6e55ac919b99bc34eca0228859fbeb175bf35fa9a1fae",
+      "original_export_sha256": "d1f0978ddf4a8b41f5a8485de06f3cada5096290a7012eec608eefb768282665"
     },
     {
       "path": "VLA/finalize_body_recovery_candidate.py",
@@ -2852,8 +2860,9 @@
     {
       "path": "VLA/flower_r69/native.py",
       "source": "VLA/flower_r69/native.py",
-      "bytes": 12664,
-      "sha256": "7bd7d9b4e02ab87cb0a2da8e498955a0f0689309b861a410b735a52c7bdd39bc"
+      "bytes": 12467,
+      "sha256": "5bf4e6081294c596cb0275215abbcb758f8e5b853b605b7c8ddde1c367ab2c4b",
+      "original_export_sha256": "7bd7d9b4e02ab87cb0a2da8e498955a0f0689309b861a410b735a52c7bdd39bc"
     },
     {
       "path": "VLA/flower_r69/pipeline.py",
@@ -3290,8 +3299,9 @@
     {
       "path": "VLA/new_vlas/adapter_loading.py",
       "source": "VLA/new_vlas/adapter_loading.py",
-      "bytes": 2603,
-      "sha256": "1be71fea3982ba8bc0dc885bcbfe8bad1416e3e366b3401326cc23ef22461b34"
+      "bytes": 2648,
+      "sha256": "176ad3eae21a2c5478f7fb28ae2b07b979e08acd8c50f1b5b393a0c9ebf56a52",
+      "original_export_sha256": "1be71fea3982ba8bc0dc885bcbfe8bad1416e3e366b3401326cc23ef22461b34"
     },
     {
       "path": "VLA/new_vlas/adapter_native_gate.py",
@@ -3356,8 +3366,9 @@
     {
       "path": "VLA/new_vlas/privileged_inputs.py",
       "source": "VLA/new_vlas/privileged_inputs.py",
-      "bytes": 5076,
-      "sha256": "519a69ac233736cfc856360d0e6dcf8b079bbfb618fc6eabcd0466a02b30457a"
+      "bytes": 5063,
+      "sha256": "e2f46a0ed1283ce8457d351c257a83b35cf5b5f7ee8bc9c80aa7a066ff5c5ac1",
+      "original_export_sha256": "519a69ac233736cfc856360d0e6dcf8b079bbfb618fc6eabcd0466a02b30457a"
     },
     {
       "path": "VLA/new_vlas/reload_gate.py",
@@ -3374,8 +3385,9 @@
     {
       "path": "VLA/new_vlas/runtime.py",
       "source": "VLA/new_vlas/runtime.py",
-      "bytes": 11042,
-      "sha256": "fd48cfa98940fe73ee0c8dc8d483e49229d3402a4a41c1025913591c500e0e87"
+      "bytes": 11768,
+      "sha256": "259e3d2c7c9ca70d004c6d4b07ff6e6894590e8114cc5fdec17acc3758e05444",
+      "original_export_sha256": "fd48cfa98940fe73ee0c8dc8d483e49229d3402a4a41c1025913591c500e0e87"
     },
     {
       "path": "VLA/new_vlas/server.py",
@@ -5168,8 +5180,9 @@
     {
       "path": "VLA/replacement_r84/native.py",
       "source": "VLA/replacement_r84/native.py",
-      "bytes": 4750,
-      "sha256": "4efee1df3e2d735dd265004322a650772a76dc15352c1ebbe5ee26334f1085be"
+      "bytes": 4835,
+      "sha256": "4ef4ffc9e521b934e1636df2770e6583c1e881fae6bb16ef586a9a9d8f142510",
+      "original_export_sha256": "4efee1df3e2d735dd265004322a650772a76dc15352c1ebbe5ee26334f1085be"
     },
     {
       "path": "VLA/replacement_r84/owner.py",
@@ -7818,10 +7831,20 @@
       "sha256": "f15b6958684a12521375dc18fe170ffb736b5f1767590ef9f38a44ac647c2260"
     },
     {
-      "path": "protocol21/adaptation_table.tex",
-      "source": "VLA/reproducibility_locked21_20261124/adaptation_table.tex",
-      "bytes": 2872,
-      "sha256": "a6ac992efc3795428c2047bb017dc6ec1e42fcfde95b11683ed78262f354ef10"
+      "path": "protocol21/README.txt",
+      "sha256": "fe4efd828a1974a7be01eb4d947a19c8a0a141144ff8ed04faea9a6840ab8afe",
+      "bytes": 782
+    },
+    {
+      "path": "protocol21/USAGE.md",
+      "sha256": "7e9fab7a057a0d00863daeb5944477be70cd64e902acd1b3cd88214aa2d450ea",
+      "bytes": 3929,
+      "original_export_sha256": "514afeae55df93a7f54ac4f936fb7cdea517823861be637bd6544740e50325cd"
+    },
+    {
+      "path": "protocol21/__init__.py",
+      "sha256": "2e4fb418859cfe21f99b0b72f440c5f2aaf226c125456f3088671ec720c7cddd",
+      "bytes": 80
     },
     {
       "path": "protocol21/camera_profile.json",
@@ -7830,28 +7853,75 @@
       "sha256": "2e9b660097b8ac71d180b47ab1c75b93a4d55e155ccbd9d9e05f646ff8e4c2d7"
     },
     {
-      "path": "protocol21/optimizer_table.tex",
-      "source": "VLA/reproducibility_locked21_20261124/optimizer_table.tex",
-      "bytes": 2456,
-      "sha256": "0654261114531c5e7a250356faaa76ae928ba84d3f3ea38ee956cc44efc66253"
+      "path": "protocol21/checkpoint.py",
+      "sha256": "4e230c6977aa378287bfd2b5297186af9c35d34fe8939bbe2c36a7b6a6232e34",
+      "bytes": 2167,
+      "original_export_sha256": "560aaf6475015edf548d689be258505cf37bc3a3f85b988822160605ee973fa6"
     },
     {
-      "path": "protocol21/paragraph.tex",
-      "source": "VLA/reproducibility_locked21_20261124/paragraph.tex",
-      "bytes": 5950,
-      "sha256": "0b801544a1903f0bfbb1a9516f2268b4b4f7df6a3abbf69b295d5a4d283cbcb2"
+      "path": "protocol21/data.py",
+      "sha256": "db49792fee33fdda06f49115c808ec56246208a46e60e3f7e569fad42f81b3a9",
+      "bytes": 8834,
+      "original_export_sha256": "ac592155b4da9f550153256e72f0505064ba99155cab18d2b45d6f2514161d53"
     },
     {
-      "path": "protocol21/references.bib",
-      "source": "VLA/reproducibility_locked21_20261124/references.bib",
-      "bytes": 5364,
-      "sha256": "f6e833a9e69fc8cdcdf7f49bea5049bbfc48c8e1c7a9be80b71f15741882773f"
+      "path": "protocol21/execution.py",
+      "sha256": "3400d3127783a9a60b7af2504b3846183cac478a4c2bc519a5e784c712f33327",
+      "bytes": 4911,
+      "original_export_sha256": "3b58779b1454a055036d6286d8996b1d218bdc4819dd2c19264010a9b20910b4"
+    },
+    {
+      "path": "protocol21/foundations.json",
+      "sha256": "68fa465cb297f46ae495e1e3c1c2c46429f48f3363e8f469a14069d9b440d4e4",
+      "bytes": 536
+    },
+    {
+      "path": "protocol21/inputs.py",
+      "sha256": "4e17fa76cd1270226e5abbd0845a9ebed9b05c9708a1c114c2751aa135c12c7d",
+      "bytes": 7125
+    },
+    {
+      "path": "protocol21/native.py",
+      "sha256": "d079480b3116b4ce501e8b8f4582fba1243618722386a6546bf665261a95806a",
+      "bytes": 10899,
+      "original_export_sha256": "9aa31b03af6f05d32c45aa8003ab336ad8126609792addcb61eac48e30ee944e"
+    },
+    {
+      "path": "protocol21/pi0.py",
+      "sha256": "93c30838063d61440164cb426edd9e50bfe19deec605b57d10ec28860edc49ea",
+      "bytes": 3498
+    },
+    {
+      "path": "protocol21/resources.py",
+      "sha256": "03832ed008996d494417e755f654d7a6f838110ae1ffb05dd429eb2b308bc1b1",
+      "bytes": 2755
+    },
+    {
+      "path": "protocol21/run.py",
+      "sha256": "4c561d469ecca2296ca423dc56c9fa04e517925be30331d9f594d9eb7a215b70",
+      "bytes": 4538
+    },
+    {
+      "path": "protocol21/sensors.py",
+      "sha256": "7a49b9329d294c3b689ac0bcbd247766f362691bef91b59642f295a99cc4d322",
+      "bytes": 2990
+    },
+    {
+      "path": "protocol21/specs.py",
+      "sha256": "d2462f399d5731e88871255d541a26f8ad93c1ff5e555eb73358890e78c17740",
+      "bytes": 696
     },
     {
       "path": "protocol21/state21_reference.py",
       "source": "VLA/reproducibility_locked21_20261124/state21_reference.py",
-      "bytes": 4525,
-      "sha256": "575fcae1ebb3eb55e4f2a18256f468c8fbedd85662f2197d7b7ad38bfd35a74a"
+      "bytes": 4763,
+      "sha256": "da837d0c832ca346fcf58a751baa6649d3af226591511bc90e8dfe9c9db112c2",
+      "original_export_sha256": "575fcae1ebb3eb55e4f2a18256f468c8fbedd85662f2197d7b7ad38bfd35a74a"
+    },
+    {
+      "path": "protocol21/targets.py",
+      "sha256": "241c9a01cfaeeeed6cdafe7c3c3b5e4c7d91a039124372ae9ceeb1ad12302a55",
+      "bytes": 1890
     },
     {
       "path": "protocol21/test_state21_reference.py",
@@ -7860,10 +7930,98 @@
       "sha256": "75651519a553fef4303b9367046777456bc745d12dd8a062709ab486e5b24b2c"
     },
     {
+      "path": "protocol21/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "protocol21/tests/test_checkpoint.py",
+      "sha256": "8e2e9d611194a0f8b0b81e16ae77e5e186f60daf7afce1ece0f95546b378f0c5",
+      "bytes": 1783,
+      "original_export_sha256": "3656823159244cbff52c62492b32123b84b46793fc0923dcb63c0afe34927e13"
+    },
+    {
+      "path": "protocol21/tests/test_execution.py",
+      "sha256": "9ea7b0ddb026114ae3e5cac4a746c4d3788adc9b4e93f371002dc7afdcd8b2cd",
+      "bytes": 3197,
+      "original_export_sha256": "4303fc07f00e859525ea9f00dac1957456696c256ca64aee3f7b195504f3b21d"
+    },
+    {
+      "path": "protocol21/tests/test_inputs.py",
+      "sha256": "1e0a47ba8477fcc9632b6f420f2bb4e684646bdc562673374fc1998e37f30d59",
+      "bytes": 6728
+    },
+    {
+      "path": "protocol21/tests/test_projectors.py",
+      "sha256": "d21fa2618286b8b7627619c0372d7fb6ae8489e789ff95886aa92174067738cb",
+      "bytes": 1850
+    },
+    {
+      "path": "protocol21/tests/test_resources.py",
+      "sha256": "7ca5021f4e921c602069629fb173b15754a0e94ea70cd94ee920a4d9f9b875e7",
+      "bytes": 711
+    },
+    {
+      "path": "protocol21/tests/test_sensors.py",
+      "sha256": "21e03675d44fe7fe4c97a3edfc8039b3616370ab8b8281a8b4939cda8c241417",
+      "bytes": 1565
+    },
+    {
       "path": "protocol21/vla21-lock-v1.json",
       "source": "VLA/reproducibility_locked21_20261124/vla21-lock-v1.json",
       "bytes": 32199,
       "sha256": "c55d50ca3c6067bfd0622919977f67b9256e211d440d9810a2f965be95d71dd2"
+    },
+    {
+      "path": "tools/export_source.py",
+      "sha256": "586f52434c46fca3087970c482acdaa92143ff116492a77415a911bc5506ed70",
+      "bytes": 8431
+    },
+    {
+      "path": "tools/link_assets.py",
+      "sha256": "e5606ba0eace47e82f503230a32aee34a3f41c922ce101aac3685a7e2f9f737a",
+      "bytes": 1031
+    },
+    {
+      "path": "tools/native_forward_smoke.py",
+      "sha256": "f91d1bf917f4c322c9b90d8e92c6286827c27e9e0f66344098ee0c5f466f2e11",
+      "bytes": 2927,
+      "original_export_sha256": "ad29000ceec69dff63ad13cc0042635b8c1df5fef0c32c7586ebc4b55a6465a9"
+    },
+    {
+      "path": "tools/restore_upstreams.py",
+      "sha256": "39ab0b0690a90d1ba227003d2f295af994c1fd3a33c1d0259f86503cbab5fd95",
+      "bytes": 2879
+    },
+    {
+      "path": "tools/update_manifest.py",
+      "sha256": "71cc8e940beb516cf3d8e3f5687794936ade13d1333530c0bc1107393ec82240",
+      "bytes": 1431
+    },
+    {
+      "path": "tools/verify_source.py",
+      "sha256": "7fdb938da980562bddd2120d740abd5bc4c5185b76d86fb189e3a3ddf80fed27",
+      "bytes": 3951
+    },
+    {
+      "path": "upstream_patches/dita.patch",
+      "sha256": "b35d4128ca9d55f0bf8beb5b2b618df8b54423855eeba874fc1f2a8ee62fc8f6",
+      "bytes": 2087
+    },
+    {
+      "path": "upstream_patches/flower_vla_pret.patch",
+      "sha256": "486a66d0b81ddc9ef4652c27bde01d13b6f7b127bd385dc96f84738a9bccb461",
+      "bytes": 1024
+    },
+    {
+      "path": "upstream_patches/openpi.patch",
+      "sha256": "b9339da0d2628705c850407684961bc403695e1c4fb35f4e17b279641714fea3",
+      "bytes": 4461
+    },
+    {
+      "path": "upstream_patches/openvla.patch",
+      "sha256": "96d5f93a6e46d5df8d18eb4a6cf53a0ca463e85c266426dcf8fe980e24c4b532",
+      "bytes": 800
     },
     {
       "path": "upstream_patches/rdt/untracked/configs/__init__.py",

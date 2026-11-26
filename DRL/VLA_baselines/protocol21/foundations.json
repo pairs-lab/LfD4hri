@@ -1,0 +1,19 @@
+{
+  "dita": {
+    "sha256": "c831d427a662a6d12249b592e0dff3ef37c9e8f67eb2460a1a6d49326800201f",
+    "source_revision": "db6907d8c0b9878570570e10d3a0599420072044"
+  },
+  "seer": {
+    "sha256": "cf10d79ca39b3c92e8df6a01c6e1c95d4be235009bac1cd82ed2514b60318210",
+    "native_topology": {
+      "transformer_layers": 24,
+      "hidden_dim": 384,
+      "sequence_length": 11,
+      "num_resampler_query": 6,
+      "action_pred_steps": 3,
+      "num_obs_token_per_image": 9,
+      "obs_pred": true,
+      "transformer_heads": 12
+    }
+  }
+}

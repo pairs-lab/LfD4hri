@@ -1,5 +1,8 @@
 {
-  "note": "Source locations, not unified training CLIs or completed 21-D runners. Later stage recipes import earlier-stage helpers.",
+  "note": "Current entry point: python -m protocol21.run (smoke/audit/native). Source locations below also contain archived stage-specific workflows; do not use their old servers for robot21. Heavy native inference must be checked in each model's own environment.",
+  "current_entry_point": "protocol21/run.py",
+  "shared_robot_state_dim": 21,
+  "interfaces": "protocol21/specs.py",
   "models": [
     {"name":"FLOWER", "url":"https://github.com/intuitive-robots/flower_vla_pret", "source":["VLA/flower_r69", "VLA/flower_r71", "VLA/flower_rotation_r76"], "upstreams":["flower_vla_pret"]},
     {"name":"X-VLA", "url":"https://github.com/2toinf/X-VLA", "source":["VLA/new_vlas", "VLA/stable_native_r44"], "upstreams":["xvla", "lerobot"]},

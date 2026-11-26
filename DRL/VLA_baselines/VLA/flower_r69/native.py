@@ -1,4 +1,4 @@
-"""Official FLOWER flow core with explicit causal scene67 / third-view additions.
+"""Official FLOWER flow core with robot21 and two actual RGB streams.
 
 No planner, geometric action residual, teacher phase, or success flag is used.
 Architecture is checkpoint-derived (12 blocks), not paper/default-derived (18).
@@ -57,7 +57,9 @@ class Native(FlowerVLA):
     def encode_observations(self, batch):
         # Preserve native pretraining order: Flow token, RGB views, text. Use
         # actual language padding mask, NOT all-ones or truncating scene text.
-        images = [self.vlm._encode_image(batch['images'][:, i]) for i in range(3)]
+        if batch['images'].shape[1] != 2 or batch['numeric'].shape[-1] != 21:
+            raise ValueError('FLOWER requires two RGB views and robot21')
+        images = [self.vlm._encode_image(batch['images'][:, i]) for i in range(2)]
         visual = torch.cat(images, dim=1)
         text = self.vlm.get_input_embeddings()(batch['input_ids'])
         flow = self.prompt_embeds.to(visual).expand(visual.shape[0], -1, -1)
@@ -103,8 +105,8 @@ def load_foundation():
     with init_empty_weights(include_buffers=False):
         model = Native(device=torch.device('meta'), process_id=0, accelerator=None,
             target_modality='actions', obs_modalities='observation', goal_modalities='task',
-            img_modalities=['image_primary', 'image_wrist', 'scene_map'], lang_modalities=['language_instruction'],
-            vlm_path=str(BASE / 'florence_assets_r69'), lowdim_obs_dim=67, action_dim=7,
+            img_modalities=['image_primary', 'image_wrist'], lang_modalities=['language_instruction'],
+            vlm_path=str(BASE / 'florence_assets_r69'), lowdim_obs_dim=21, action_dim=7,
             act_window_size=10, multistep=10, num_sampling_steps=4, use_second_view=True,
             use_proprio=True, action_type_adaln=True, use_causal_attention=True,
             use_cross_attn=True, use_adaln_cond=False, sampling_type='uniform',
@@ -145,7 +147,7 @@ def adapt(model, *, device='cuda', rank=8):
     # Explicitly replace only the EEF ZeroEncoder. No learned native EEF state
     # prefix exists to overwrite. Initially remains exactly the zero branch.
     dim = model.dit_dim
-    projection = nn.Sequential(nn.Linear(67, dim), nn.SiLU(), nn.Linear(dim, dim))
+    projection = nn.Sequential(nn.Linear(21, dim), nn.SiLU(), nn.Linear(dim, dim))
     nn.init.zeros_(projection[-1].weight)
     nn.init.zeros_(projection[-1].bias)
     model.proprio_encoders['eef_delta'] = projection
@@ -172,7 +174,7 @@ def adapt(model, *, device='cuda', rank=8):
     model.to(device)
     model.prompt_embeds = model.prompt_embeds.to(device)
     return {'backbone_lora_rank': rank, 'backbone_lora_layers': len(targets),
-            'privileged_projection': '67->1024->1024_EEF_ZeroEncoder_replacement',
+            'robot_state_projection': '21->1024->1024_EEF_ZeroEncoder_replacement',
             'trainable_parameters': sum(p.numel() for p in model.parameters() if p.requires_grad),
             'full_VLM_finetune_NOT_reproduced': True}
 
@@ -186,20 +188,16 @@ def image_tensor(rgb):
 
 
 def native_batch(sample, tokenizer, stats, device='cuda'):
-    # Full scene values travel losslessly as numeric67, not an overlength
-    # textual list that would be cut off by the author's 50-token tokenizer.
+    from protocol21.state21_reference import normalize
     prompt = ('Agent Type: 1-arm UR5e Robotiq2F-85, Action Space: Delta End-Effector, '
               'Task Instruction: ' + sample['instruction'])
     ids = tokenizer(prompt, return_tensors='pt', truncation=False)
     if ids['input_ids'].shape[1] > 77:
         raise ValueError('Prompt exceeds declared budget; do not silently truncate instruction')
-    mean, std = (np.asarray(stats['scene67'][k], np.float32) for k in ('mean', 'std'))
-    state = np.asarray(sample['numeric67'], np.float32)
-    if state.shape != (67,) or not np.isfinite(state).all():
-        raise ValueError('All causal67 fields required')
-    batch = {'images': torch.stack([image_tensor(sample[k]) for k in ('front', 'wrist', 'map')])[None].to(device),
+    state = normalize(sample['raw_state21'], stats['robot21'])
+    batch = {'images': torch.stack([image_tensor(sample[k]) for k in ('front', 'wrist')])[None].to(device),
         'input_ids': ids['input_ids'].to(device), 'attention_mask': ids['attention_mask'].to(device),
-        'numeric': torch.from_numpy((state - mean) / (std + 1e-8))[None].to(device)}
+        'numeric': torch.from_numpy(state)[None].to(device)}
     return batch
 
 

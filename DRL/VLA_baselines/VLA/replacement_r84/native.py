@@ -23,7 +23,7 @@ class Runtime:
         old = self.model.action_projector
         if not isinstance(old, torch.nn.Linear) or old.in_features != 7:
             raise ValueError('Official linear native proprio7 prefix required')
-        extended = torch.nn.Linear(74, old.out_features, dtype=old.weight.dtype)
+        extended = torch.nn.Linear(28, old.out_features, dtype=old.weight.dtype)
         with torch.no_grad():
             extended.weight.zero_()
             extended.weight[:,:7].copy_(old.weight)
@@ -43,9 +43,9 @@ class Runtime:
         from torchvision.transforms import functional as F
         from torchvision.transforms import RandomResizedCrop
         images = []
-        for name in ('front','wrist','map'):
+        for name in ('front','wrist'):
             image = Image.fromarray(s[name]).resize((256,256), Image.Resampling.BILINEAR)
-            if augment and name != 'map':
+            if augment:
                 i,j,h,w = RandomResizedCrop.get_params(image, (.8,1.), (.9,1.1))
                 image = F.resized_crop(image,i,j,h,w,(256,256))
                 image = F.adjust_brightness(image,float(torch.empty(()).uniform_(.8,1.2)))
@@ -58,14 +58,15 @@ class Runtime:
         text = self.model.processor.apply_chat_template([{'role':'user','content':content}],
             tokenize=False, add_generation_prompt=True)
         inputs = self.model.processor(text=[text], images=images, padding=True, return_tensors='pt')
-        if len(inputs['image_grid_thw']) != 3 or 'mm_token_type_ids' not in inputs:
-            raise ValueError('Missing native3-view or Qwen3.5 multimodal type IDs')
+        if len(inputs['image_grid_thw']) != 2 or 'mm_token_type_ids' not in inputs:
+            raise ValueError('Missing native2-view or Qwen3.5 multimodal type IDs')
         valid = {'input_ids','attention_mask','pixel_values','image_grid_thw','mm_token_type_ids','token_type_ids'}
         batch = {k:v.cuda() for k,v in inputs.items() if k in valid}
         batch['pixel_values'] = batch['pixel_values'].to(torch.bfloat16)
-        batch['proprioception'] = torch.as_tensor(s['history74'][None], device='cuda')
-        self.last_input = {'actual_views':3, 'image_grid_thw':inputs['image_grid_thw'].tolist(),
-            'text_token_count':int(inputs['input_ids'].shape[1]), 'proprio_shape':[1,8,74],
+        batch['proprioception'] = torch.as_tensor(s['history28'][None], device='cuda')
+        if batch['proprioception'].shape != (1,8,28):raise ValueError('Expected history8 x native7+robot21')
+        self.last_input = {'actual_views':2, 'image_grid_thw':inputs['image_grid_thw'].tolist(),
+            'text_token_count':int(inputs['input_ids'].shape[1]), 'proprio_shape':[1,8,28],
             'history_includes_current_and_causal_past_only':True,
             'observation_numeric_action_planner':False}
         return batch

@@ -1,7 +1,7 @@
 """Native pretrained VLA runtimes shared by training and robot inference.
 
 No geometric planner, privileged residual action, or oracle fallback. Each
-runtime appends67 observations to native proprio and runs the real VLA.
+runtime appends21 robot observations to native proprio and runs the real VLA.
 """
 from functools import lru_cache
 import json
@@ -24,6 +24,7 @@ class Runtime:
                 for key, value in module.named_parameters() if value.requires_grad}
 
     def to(self, device):
+        self.device = str(device)
         for module in self.modules.values():
             module.to(device)
         return self
@@ -62,19 +63,19 @@ class XVLARuntime(Runtime):
     rank = 8
     horizon = 30
 
-    def __init__(self, stats):
+    def __init__(self, stats, *, checkpoint=None, resource_root=ROOT):
         from lerobot.configs import PolicyFeature, FeatureType
         from lerobot.policies.xvla.configuration_xvla import XVLAConfig
         from lerobot.policies.xvla.modeling_xvla import XVLAPolicy
         self.stats = stats
-        checkpoint = ROOT/'VLA/checkpoints/xvla-base'
+        checkpoint = Path(checkpoint) if checkpoint else Path(resource_root)/'VLA/checkpoints/xvla-base'
         cfg = XVLAConfig.from_pretrained(str(checkpoint))
         cfg.device, cfg.dtype = 'cpu', torch.float32
-        model = XVLAPolicy.from_pretrained(checkpoint, config=cfg)
+        model = XVLAPolicy.from_pretrained(checkpoint, config=cfg,strict=True,local_files_only=True)
         self.extension = expand_xvla_proprio(model.model.transformer, cfg.max_state_dim)
-        cfg.max_state_dim = 87
-        cfg.input_features['observation.state'] = PolicyFeature(type=FeatureType.STATE, shape=(87,))
-        model.model.dim_proprio = 87
+        cfg.max_state_dim = 41
+        cfg.input_features['observation.state'] = PolicyFeature(type=FeatureType.STATE, shape=(41,))
+        model.model.dim_proprio = 41
         for value in model.parameters():
             value.requires_grad_(False)
         model = inject_native_lora(model, self.rank)
@@ -84,7 +85,7 @@ class XVLARuntime(Runtime):
         self.model, self.config = model, cfg
         self.modules = {'policy': model}
         self.tokenizer = AutoTokenizer.from_pretrained('facebook/bart-large',
-            cache_dir=str(ROOT/'VLA/checkpoints/huggingface/hub'), local_files_only=True)
+            cache_dir=str(Path(resource_root)/'VLA/checkpoints/huggingface/hub'), local_files_only=True)
 
     @lru_cache(maxsize=512)
     def tokens(self, instruction):
@@ -94,13 +95,17 @@ class XVLARuntime(Runtime):
                               max_length=50, truncation=False)['input_ids']
 
     def batch(self, sample):
+        if np.asarray(sample['state']).shape != (41,):
+            raise ValueError('X-VLA requires native20 + robot21, not a historical state vector')
         result = {'observation.state': torch.from_numpy(sample['state'])[None].to('cuda'),
             'observation.language.tokens': self.tokens(sample['instruction']).to('cuda'),
             'domain_id': torch.tensor([12], device='cuda', dtype=torch.long)}
         mean = torch.tensor([.485, .456, .406], device='cuda')[:, None, None]
         std = torch.tensor([.229, .224, .225], device='cuda')[:, None, None]
         for key, role in (('image', 'front'), ('image2', 'wrist')):
+            from torchvision.transforms.functional import resize
             values = torch.as_tensor(sample[role], device='cuda').permute(2, 0, 1).float()/255
+            values = resize(values, [224,224], antialias=True)
             result['observation.images.'+key] = ((values-mean)/std)[None]
         if 'action' in sample:
             result['action'] = torch.from_numpy(sample['action'])[None].to('cuda')
@@ -128,11 +133,11 @@ class AdapterRuntime(Runtime):
     rank = 64
     horizon = 8
 
-    def __init__(self, stats):
+    def __init__(self, stats, *, checkpoint=None, resource_root=ROOT):
         from VLA.new_vlas.adapter_loading import import_native, install_amp_query_cast
         from peft import get_peft_model, LoraConfig
-        Config, Model, ImageProcessor, Processor, Head, Projector = import_native()
-        checkpoint = ROOT/'VLA/checkpoints/vla-adapter-spatial-pro'
+        Config, Model, ImageProcessor, Processor, Head, Projector = import_native(Path(resource_root)/'VLA/third_party/vla_adapter')
+        checkpoint = Path(checkpoint) if checkpoint else Path(resource_root)/'VLA/checkpoints/vla-adapter-spatial-pro'
         cfg = Config.from_pretrained(checkpoint)
         base, info = Model.from_pretrained(checkpoint, config=cfg, torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True, attn_implementation='eager', output_loading_info=True)
@@ -178,6 +183,8 @@ class AdapterRuntime(Runtime):
         self.head.predict_action = MethodType(capture, self.head)
 
     def batch(self, sample):
+        if np.asarray(sample['state']).shape != (29,):
+            raise ValueError('VLA-Adapter requires native8 + robot21')
         instruction = sample['instruction'].lower()
         prompt = ('<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n'
             '<|im_start|>user\nWhat action should the robot take to '+instruction+

@@ -1,7 +1,7 @@
 """Lossless input-width extensions, NOT a controller or action correction.
 
-The native proprio prefix keeps its original meaning. All causal67 simulator
-features are appended, never substituted for an incompatible native prefix.
+The native proprio prefix keeps its original meaning. The robot21 channels
+are appended, never substituted for an incompatible native prefix.
 New columns start at zero while every pretrained column remains exact.
 """
 import torch
@@ -52,11 +52,11 @@ def append_numeric67(native_proprio, raw64, stats):
     return result
 
 
-def expand_xvla_proprio(transformer, original_proprio_dim, extra_dim=67):
+def expand_xvla_proprio(transformer, original_proprio_dim, extra_dim=21):
     """Preserve native [action, proprio, time] weights around inserted columns."""
     old = transformer.action_encoder
     prefix = transformer.dim_action+original_proprio_dim
-    if extra_dim != 67 or old.input_size != prefix+transformer.dim_time:
+    if extra_dim != 21 or old.input_size != prefix+transformer.dim_time:
         raise ValueError('Unexpected native X-VLA action/proprio/time layout')
     new = type(old)(old.input_size+extra_dim, old.output_size,
                     num_domains=old.fc.num_embeddings).to(old.fc.weight)
@@ -75,13 +75,13 @@ def expand_xvla_proprio(transformer, original_proprio_dim, extra_dim=67):
     return {'original_proprio_dim': original_proprio_dim, 'appended_numeric_dim': extra_dim,
         'new_proprio_dim': original_proprio_dim+extra_dim,
         'all_pretrained_columns_and_bias_preserved_exactly': True,
-        'new_columns_zero_initialized': True, 'schema': 'native_proprio_plus_causal67_v1'}
+        'new_columns_zero_initialized': True, 'schema': 'native_proprio_plus_robot21_v1'}
 
 
-def expand_adapter_proprio(projector, extra_dim=67):
+def expand_adapter_proprio(projector, extra_dim=21):
     """Extend the official ProprioProjector without replacing its learned prefix."""
     old = projector.fc1
-    if not isinstance(old, nn.Linear) or extra_dim != 67:
+    if not isinstance(old, nn.Linear) or extra_dim != 21:
         raise ValueError('Expected official linear proprio input projector')
     new = nn.Linear(old.in_features+extra_dim, old.out_features,
                     bias=old.bias is not None).to(old.weight)
@@ -96,4 +96,4 @@ def expand_adapter_proprio(projector, extra_dim=67):
     projector.proprio_dim = new.in_features
     return {'original_proprio_dim': old.in_features, 'appended_numeric_dim': extra_dim,
         'new_proprio_dim': new.in_features, 'all_pretrained_columns_and_bias_preserved_exactly': True,
-        'new_columns_zero_initialized': True, 'schema': 'native_proprio_plus_causal67_v1'}
+        'new_columns_zero_initialized': True, 'schema': 'native_proprio_plus_robot21_v1'}

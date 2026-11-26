@@ -2,7 +2,7 @@ from pathlib import Path
 import hashlib
 import json
 
-ROOT = Path('/work/LfD4hri/DRL')
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT/'VLA/audits/storage_baseline_r91_20261022/falcon_esm'
 REPO = ROOT/'VLA/third_party/falcon_vla'
 ASSETS = ROOT/'VLA/checkpoints/falcon_esm_r91'
